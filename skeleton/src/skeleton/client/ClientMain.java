@@ -10,18 +10,10 @@ import skeleton.server.TCPIPBuilder;
 public class ClientMain {
 
 	public static void main(String[] args) {
-
-		try {
-			ServerSocket ss = new ServerSocket(6667);
-			ServerListener sl = new ServerListener(ss);
-			sl.start();
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		ClientMonitor monitor = new ClientMonitor();
+		ServerListener sl = new ServerListener(monitor,"localhost", 5555);
+		ServerWriter sw = new ServerWriter(monitor, "localhost",5555);
+		sl.start();
 
 	}
 }

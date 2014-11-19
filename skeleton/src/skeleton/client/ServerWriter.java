@@ -8,8 +8,9 @@ public class ServerWriter extends Thread {
 	private OutputStream os;
 	private ClientMonitor monitor;
 
-	public ServerWriter(Socket s, ClientMonitor m) {
+	public ServerWriter(ClientMonitor m, String address, int port) {
 		try {
+			s = new Socket(address, port);
 			monitor = m;
 			os = s.getOutputStream();
 		} catch (IOException e) {
@@ -24,11 +25,11 @@ public class ServerWriter extends Thread {
 				monitor.initMovieMode();
 				os.write((byte) 1 % 255);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				System.out.println("[ServerWriter] (run) transmition error");
 				e.printStackTrace();
 			} catch (InterruptedException e) {
 				System.out
-						.println("ClientMonitor initMovieMode(); wait() has been interrupted.");
+						.println("[ServerWriter] (run) ClientMonitor initMovieMode(); wait() has been interrupted.");
 				e.printStackTrace();
 			}
 		}

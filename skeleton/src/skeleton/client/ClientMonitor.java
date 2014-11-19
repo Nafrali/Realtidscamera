@@ -7,10 +7,14 @@ public class ClientMonitor {
 		movieMode = false;
 	}
 
-	synchronized public void initMovieMode() throws InterruptedException {
+	public synchronized void initMovieMode() throws InterruptedException {
 		while (!movieMode) {
 			wait();
 		}
+	}
+
+	public synchronized void newPackage(byte[] data) {
+		
 	}
 
 }

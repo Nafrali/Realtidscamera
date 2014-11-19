@@ -1,21 +1,32 @@
 package skeleton.server;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.ServerSocket;
 
 public class ServerMonitor {
+	private ServerSocket serverSocket;
 	private byte[] image;
 	private boolean movieMode;
 	private int a;
-	private InputStream is;
-	private OutputStream os;
 	private boolean socketReadImage;
 	private int imgNbr;
 	
 	
-	public ServerMonitor() {
+	public ServerMonitor(int port) {
+		try {
+			serverSocket = new ServerSocket(port);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		imgNbr = 0;
 		movieMode = false;
+	}
+	
+	public synchronized ServerSocket getServerSocket(){
+		return serverSocket;
 	}
 	
 	public synchronized void setMovieMode(boolean movie) {

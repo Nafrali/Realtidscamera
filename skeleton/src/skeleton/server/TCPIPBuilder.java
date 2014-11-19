@@ -6,22 +6,26 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class TCPIPBuilder extends Thread {
-	private Socket s;
+public class TCPIPBuilder extends Thread { // RENAME!!
+	private ServerSocket serverSocket;
 	private OutputStream os;
+	private Socket socket;
+	private ServerMonitor monitor;
 
-	public TCPIPBuilder() {
+	// Denna klass connectar till ServerListener
+	public TCPIPBuilder(ServerMonitor monitor) {
+		this.monitor = monitor;
+		serverSocket = monitor.getServerSocket();
+
 		try {
-			System.out.println("Client connecting to server...");
-			s = new Socket("localhost", 6667);
-			System.out.println("Client connected.");
-			os = s.getOutputStream();
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Waiting for client to connect...");
+			socket = serverSocket.accept();
+			System.out.println("Connection to client established.");
+			os = socket.getOutputStream();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -29,15 +33,12 @@ public class TCPIPBuilder extends Thread {
 	}
 
 	public void run() {
-		byte[] data = new byte[100]; // Arraylängden kommer vara 131084
-										// (AxisBufferLength+12)
-		for (int i = 0; i < 100; i++) {
-			data[i] = (byte) (i % 255);
-		}
+		byte[] data = monitor.getImage();// Arraylängden kommer vara 131084 //
+											// (AxisBufferLength+12)
 		try {
-			os.write(data, 0, 100);
+			os.write(data, 0, 131084);
 			System.out.println("Transmitting data.");
-			s.close();
+			socket.close();
 		} catch (IOException e) {
 			System.out.println("Could not transmit.");
 		}

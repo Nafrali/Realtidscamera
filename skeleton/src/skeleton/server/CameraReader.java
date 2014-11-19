@@ -5,12 +5,12 @@ import java.nio.ByteBuffer;
 import se.lth.cs.eda040.fakecamera.*;
 
 public class CameraReader extends Thread {
-	private Monitor m;
+	private ServerMonitor m;
 	private AxisM3006V myCamera;
 	private final byte delimiter = (byte)'\n';
 	private final byte endbyte = (byte)'\r';
 	
-	public CameraReader(Monitor m) {
+	public CameraReader(ServerMonitor m) {
 		super();
 		this.m = m;
 		myCamera = new AxisM3006V();

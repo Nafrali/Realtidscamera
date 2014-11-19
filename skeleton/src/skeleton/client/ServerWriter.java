@@ -6,9 +6,9 @@ import java.net.Socket;
 public class ServerWriter extends Thread {
 	private Socket s;
 	private OutputStream os;
-	private Monitor monitor;
+	private ClientMonitor monitor;
 
-	public ServerWriter(Socket s, Monitor m) {
+	public ServerWriter(Socket s, ClientMonitor m) {
 		try {
 			monitor = m;
 			os = s.getOutputStream();

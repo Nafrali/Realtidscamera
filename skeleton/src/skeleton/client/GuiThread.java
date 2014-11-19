@@ -1,5 +1,9 @@
 package skeleton.client;
 
-public class GuiThread {
-
+public class GuiThread extends Thread {
+	
+	public GuiThread() {
+		super();
+	}
+	
 }

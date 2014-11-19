@@ -2,9 +2,11 @@ package skeleton.server;
 
 public class ServerMain {
 	public static void main(String[] args) {
-//		CameraReader c = new CameraReader();
-//		c.start();
-		TCPIPBuilder tcpip = new TCPIPBuilder();
-		tcpip.start();
+		ServerMonitor m = new ServerMonitor();
+		CameraReader c = new CameraReader(m);
+		c.start();
+		new JPEGHTTPServer(8080, m);
+//		TCPIPBuilder tcpip = new TCPIPBuilder(m);
+//		tcpip.start();
 	}
 }

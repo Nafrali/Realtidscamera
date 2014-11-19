@@ -40,7 +40,6 @@ public class CameraReader extends Thread {
 		target[len+11]=endbyte;
 		System.arraycopy(target, 0, image, 0, len+12);
 		m.storeImage(image);
-		System.out.println(image[len+11]);
 		
 		}
 	}

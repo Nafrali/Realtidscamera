@@ -19,30 +19,25 @@ import se.lth.cs.eda040.fakecamera.*;      // Provides AxisM3006V
  * of the requested file name.
  */
 public class JPEGHTTPServer {
+	
 
-	// ----------------------------------------------------------- MAIN PROGRAM
-
-	public static void main(String[]args) {
-		JPEGHTTPServer theServer = new JPEGHTTPServer(Integer.parseInt(args[0]));
-		try {
-			theServer.handleRequests();
-		} catch(IOException e) {
-			System.out.println("Error!");
-			theServer.destroy();
-			System.exit(1);
-		}
-	}
 
 	// ------------------------------------------------------------ CONSTRUCTOR
 
 	/**
 	 * @param   port   The TCP port the server should listen to
 	 */
-	public JPEGHTTPServer(int port) {
+	ServerMonitor m;
+	public JPEGHTTPServer(int port, ServerMonitor m) {
+		this.m = m;
 		myPort   = port;
-		myCamera = new AxisM3006V();
-		myCamera.init();
-		myCamera.setProxy("argus-1.student.lth.se", port);
+		try {
+			handleRequests();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 
 	// --------------------------------------------------------- PUBLIC METHODS
@@ -105,14 +100,12 @@ public class JPEGHTTPServer {
 					putLine(os, "Cache-Control: no-cache");
 					putLine(os, "");                   // Means 'end of header'
 
-					if (!myCamera.connect()) {
-						System.out.println("Failed to connect to camera!");
-						System.exit(1);
-					}
-					int len = myCamera.getJPEG(jpeg, 0);
-					
-					os.write(jpeg, 0, len);
-					myCamera.close();
+
+					jpeg = m.getImage();
+					byte[] image = new byte[jpeg.length-12];
+					System.arraycopy(jpeg, 11, image, 0, jpeg.length-12);
+					os.write(image);
+
 				}
 				else {
 					// Got some other request. Respond with an error message.
@@ -134,9 +127,6 @@ public class JPEGHTTPServer {
 		}
 	}
 	
-	public void destroy() {
-		myCamera.destroy();
-	}
 	
 	
 	// -------------------------------------------------------- PRIVATE METHODS
@@ -178,7 +168,6 @@ public class JPEGHTTPServer {
 	// ----------------------------------------------------- PRIVATE ATTRIBUTES
 
 	private int myPort;                             // TCP port for HTTP server
-	private AxisM3006V myCamera;                    // Makes up the JPEG images
 
 	// By convention, these bytes are always sent between lines
 	// (CR = 13 = carriage return, LF = 10 = line feed)

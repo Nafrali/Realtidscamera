@@ -20,11 +20,15 @@ public class ServerWriter extends Thread {
 
 	public void run() {
 		while (true) {
-			monitor.initMovieMode();
 			try {
+				monitor.initMovieMode();
 				os.write((byte) 1 % 255);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				System.out
+						.println("ClientMonitor initMovieMode(); wait() has been interrupted.");
 				e.printStackTrace();
 			}
 		}

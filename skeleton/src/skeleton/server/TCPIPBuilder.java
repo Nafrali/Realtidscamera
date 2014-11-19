@@ -18,6 +18,7 @@ public class TCPIPBuilder extends Thread { // RENAME!!
 
 	// Denna klass connectar till ServerListener
 	public TCPIPBuilder(ServerMonitor monitor) {
+		super();
 		this.monitor = monitor;
 		serverSocket = monitor.getServerSocket();
 
@@ -33,14 +34,17 @@ public class TCPIPBuilder extends Thread { // RENAME!!
 	}
 
 	public void run() {
-		byte[] data = monitor.getImage();// Arraylängden kommer vara 131084 //
-											// (AxisBufferLength+12)
-		try {
-			os.write(data, 0, 131084);
-			System.out.println("Transmitting data.");
-			socket.close();
-		} catch (IOException e) {
-			System.out.println("Could not transmit.");
+
+		while (true) {
+
+			byte[] data = monitor.getImage();
+			try {
+				os.write(data);
+				System.out.println("Transmitting data.");
+				// s.close();
+			} catch (IOException e) {
+				System.out.println("Could not transmit.");
+			}
 		}
 	}
 }

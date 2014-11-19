@@ -8,6 +8,7 @@ public class ServerMain {
 		c.start();
 		new JPEGHTTPServer(8080, m);
 		TCPIPBuilder tcpip = new TCPIPBuilder(m);
+		ClientListener cl = new ClientListener(m);
 		tcpip.start();
 	}
 }

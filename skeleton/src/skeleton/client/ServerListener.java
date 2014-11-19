@@ -2,7 +2,6 @@ package skeleton.client;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.ServerSocket;
 import java.net.Socket;
 
 public class ServerListener extends Thread {
@@ -13,6 +12,7 @@ public class ServerListener extends Thread {
 	private ClientMonitor monitor;
 
 	public ServerListener(ClientMonitor monitor, String address, int port) {
+		super();
 		this.monitor = monitor;
 		while (!connected) {
 			try {
@@ -34,20 +34,22 @@ public class ServerListener extends Thread {
 	}
 
 	public void run() {
-		try {
-			byte[] data = new byte[131084];
-			int read = 0;
-			while (read < 131084) {
-				int n = is.read(data, read, 131084 - read); // Blocking
-				if (n == -1)
-					throw new IOException("Corrupted data.");
-				read += n;
+		while (true) {
+			try {
+				byte[] data = new byte[131084];
+				int read = 0;
+				while (read < 131084) {
+					int n = is.read(data, read, 131084 - read); // Blocking
+					if (n == -1)
+						throw new IOException("Corrupted data.");
+					read += n;
+				}
+				monitor.newPackage(data);
+				s.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			monitor.newPackage(data);
-			s.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 }

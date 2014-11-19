@@ -23,9 +23,9 @@ public class TCPIPBuilder extends Thread { // RENAME!!
 		serverSocket = monitor.getServerSocket();
 
 		try {
-			System.out.println("Waiting for client to connect...");
+			System.out.println("Writer waiting for client to connect...");
 			socket = serverSocket.accept();
-			System.out.println("Connection to client established.");
+			System.out.println("Writer connection to client established.");
 			os = socket.getOutputStream();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -39,7 +39,7 @@ public class TCPIPBuilder extends Thread { // RENAME!!
 
 			byte[] data = monitor.getImage();
 			try {
-				os.write(data);
+				os.write(data, 0, 131084);
 				System.out.println("Transmitting data.");
 				// s.close();
 			} catch (IOException e) {

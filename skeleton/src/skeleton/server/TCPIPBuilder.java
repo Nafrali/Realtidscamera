@@ -29,15 +29,17 @@ public class TCPIPBuilder extends Thread {
 	}
 
 	public void run() {
-		byte[] data = new byte[100];	//Arraylängden kommer vara 131084 (AxisBufferLength+12)
+		byte[] data = new byte[100]; // Arraylängden kommer vara 131084
+										// (AxisBufferLength+12)
 		for (int i = 0; i < 100; i++) {
 			data[i] = (byte) (i % 255);
 		}
 		try {
 			os.write(data, 0, 100);
+			System.out.println("Transmitting data.");
 			s.close();
 		} catch (IOException e) {
-			System.out.println("Could not send data.");
+			System.out.println("Could not transmit.");
 		}
 	}
 }

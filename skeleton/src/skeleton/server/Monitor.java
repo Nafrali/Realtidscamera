@@ -1,6 +1,7 @@
 package skeleton.server;
 
-import se.lth.cs.eda040.fakecamera.AxisM3006V;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 public class Monitor {
 	private byte[] image;

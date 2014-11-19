@@ -5,8 +5,10 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import skeleton.server.TCPIPBuilder;
+
 public class ClientMain {
-	
+
 	public static void main(String[] args) {
 
 		try {
@@ -20,6 +22,6 @@ public class ClientMain {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
 }

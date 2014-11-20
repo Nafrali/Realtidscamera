@@ -39,16 +39,17 @@ public class GUIt extends JFrame implements ItemListener {
 		imagePanelR = new ImagePanel();
 		imagePanelL = new ImagePanel();
 		getContentPane().setLayout(new BorderLayout());
-		getContentPane().add(imagePanelR, BorderLayout.NORTH);
+		getContentPane().add(imagePanelR, BorderLayout.EAST);
+//		getContentPane().add(imagePanelL, BorderLayout.WEST);
 		checkboxPanel = new JPanel();
 		checkboxPanel.setLayout(new BorderLayout());
-		add(checkboxPanel, BorderLayout.SOUTH);
+		getContentPane().add(checkboxPanel, BorderLayout.SOUTH);
 		checkboxPanel.add(movie, BorderLayout.WEST);
 		checkboxPanel.add(synch, BorderLayout.EAST);
 		setLocationRelativeTo(null);
 		pack();
-		setResizable(true);
-		setVisible(true);
+		setResizable(false);
+	
 	}
 
 	class ImagePanel extends JPanel {
@@ -65,12 +66,9 @@ public class GUIt extends JFrame implements ItemListener {
 		}
 
 		public void refresh(byte[] data) {
-//			Image theImage = getToolkit().createImage(data);
-//			getToolkit().prepareImage(theImage, -1, -1, null);
-//			icon.setImage(theImage);
+
 			label.setIcon(new ImageIcon(data));
-			//System.out.println(theImage==null);
-			//icon.paintIcon(this, this.getGraphics(), 5, 5);
+
 		}
 	}
 
@@ -78,6 +76,11 @@ public class GUIt extends JFrame implements ItemListener {
 		jpeg = newPicture;
 		imagePanelR.refresh(jpeg);
 		imagePanelL.refresh(jpeg);
+		if (firstCall) {
+			this.pack();
+			this.setVisible(true);
+			firstCall = false;
+		}
 	}
 
 	@Override

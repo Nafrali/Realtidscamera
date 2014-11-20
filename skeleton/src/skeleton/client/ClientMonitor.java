@@ -30,14 +30,13 @@ public class ClientMonitor {
 		byte[] motion = new byte[1];
 		byte[] timestamp = new byte[8];
 		byte[] image = new byte[currentPackage.length - 9];
-		
+
 		// System.out.println(currentPackage.toString().indexOf('\r'));
 		System.arraycopy(currentPackage, 0, motion, 0, 1);
 		// System.out.println("MotionDetected 2: " + motion[0]);
 		System.arraycopy(currentPackage, 1, timestamp, 0, 8);
-		System.arraycopy(currentPackage, 9, image, 0,
-				currentPackage.length - 9);
-		
+		System.arraycopy(currentPackage, 9, image, 0, currentPackage.length - 9);
+
 		currentImage = image;
 		newPicture = true;
 		notifyAll();
@@ -45,7 +44,7 @@ public class ClientMonitor {
 	}
 
 	public synchronized byte[] getLatestImage() {
-		while (newPicture == false) {
+		while (!newPicture) {
 			try {
 				wait();
 			} catch (InterruptedException e) {

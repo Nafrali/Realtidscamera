@@ -36,7 +36,7 @@ public class TCPIPBuilder extends Thread { // RENAME!!
 			try {
 				os.write(data);
 
-				System.out.println("Transmitting data.");
+				// System.out.println("Transmitting data.");
 
 			} catch (IOException e) {
 				System.out.println("Could not transmit.");

@@ -7,6 +7,8 @@ public class ClientMain {
 		ClientMonitor monitor = new ClientMonitor();
 
 		GUIt gui = new GUIt(monitor);
+		GuiThread guiThread = new GuiThread(monitor, gui);
+		guiThread.start();
 		ServerListener sl = new ServerListener(monitor, "localhost", 5555);
 		ServerWriter sw = new ServerWriter(monitor, "localhost", 5555);
 

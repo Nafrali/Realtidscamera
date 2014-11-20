@@ -12,6 +12,6 @@ public class ServerMain {
 		ClientListener cl = new ClientListener(m);
 		cl.start();
 		tcpip.start();
-		cl.start();
+
 	}
 }

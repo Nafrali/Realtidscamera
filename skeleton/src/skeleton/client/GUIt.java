@@ -47,26 +47,30 @@ public class GUIt extends JFrame implements ItemListener {
 		checkboxPanel.add(synch, BorderLayout.EAST);
 		setLocationRelativeTo(null);
 		pack();
-		setResizable(false);
+		setResizable(true);
 		setVisible(true);
 	}
 
 	class ImagePanel extends JPanel {
 		ImageIcon icon;
-
+		JLabel label;
+		
 		public ImagePanel() {
 			super();
 			icon = new ImageIcon();
-			JLabel label = new JLabel(icon);
+			label = new JLabel(icon);
+			
 			add(label, BorderLayout.CENTER);
 			this.setSize(200, 200);
 		}
 
 		public void refresh(byte[] data) {
-			Image theImage = getToolkit().createImage(data);
-			getToolkit().prepareImage(theImage, -1, -1, null);
-			icon.setImage(theImage);
-			icon.paintIcon(this, this.getGraphics(), 5, 5);
+//			Image theImage = getToolkit().createImage(data);
+//			getToolkit().prepareImage(theImage, -1, -1, null);
+//			icon.setImage(theImage);
+			label.setIcon(new ImageIcon(data));
+			//System.out.println(theImage==null);
+			//icon.paintIcon(this, this.getGraphics(), 5, 5);
 		}
 	}
 

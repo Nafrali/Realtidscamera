@@ -1,8 +1,6 @@
 package skeleton.server;
 
-import java.nio.ByteBuffer;
-
-import se.lth.cs.eda040.fakecamera.*;
+import se.lth.cs.eda040.fakecamera.AxisM3006V;
 
 public class CameraReader extends Thread {
 	private ServerMonitor m;

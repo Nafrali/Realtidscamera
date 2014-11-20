@@ -1,19 +1,15 @@
 package skeleton.server;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.ServerSocket;
 
 public class ServerMonitor {
 	private ServerSocket serverSocket;
 	private byte[] image;
 	private boolean movieMode;
-	private int a;
 	private boolean socketReadImage;
 	private int imgNbr;
-	
-	
+
 	public ServerMonitor(int port) {
 		try {
 			serverSocket = new ServerSocket(port);
@@ -24,28 +20,28 @@ public class ServerMonitor {
 		imgNbr = 0;
 		movieMode = false;
 	}
-	
-	public synchronized ServerSocket getServerSocket(){
+
+	public synchronized ServerSocket getServerSocket() {
 		return serverSocket;
 	}
-	
+
 	public synchronized void setMovieMode(boolean movie) {
 		movieMode = movie;
 	}
 
 	public synchronized void storeImage(byte[] image) {
-		this.image=image;
-		if(!movieMode&&image[0]==(byte)1){
+		this.image = image;
+		if (!movieMode && image[0] == (byte) 1) {
 			setMovieMode(true);
 		}
 		socketReadImage = false;
-		imgNbr = (imgNbr+1)%125;
+		imgNbr = (imgNbr + 1) % 125;
 		notifyAll();
 	}
-	
+
 	public synchronized byte[] getImage() {
-		
-		while ( (!movieMode || imgNbr != 0) && socketReadImage) {			
+
+		while ((!movieMode || imgNbr != 0) && socketReadImage) {
 			try {
 				wait();
 			} catch (InterruptedException e) {
@@ -53,9 +49,8 @@ public class ServerMonitor {
 			}
 		}
 		socketReadImage = true;
+
 		return image;
 	}
 
-	
 }
-

@@ -1,14 +1,9 @@
 package skeleton.server;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
 public class TCPIPBuilder extends Thread { // RENAME!!
 	private ServerSocket serverSocket;
@@ -39,9 +34,8 @@ public class TCPIPBuilder extends Thread { // RENAME!!
 
 			byte[] data = monitor.getImage();
 			try {
-				os.write(data, 0, 131084);
+				os.write(data);
 				System.out.println("Transmitting data.");
-				// s.close();
 			} catch (IOException e) {
 				System.out.println("Could not transmit.");
 			}

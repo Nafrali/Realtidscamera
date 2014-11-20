@@ -6,9 +6,11 @@ public class ServerMain {
 		ServerMonitor m = new ServerMonitor(5555);
 		CameraReader c = new CameraReader(m);
 		c.start();
-		new JPEGHTTPServer(8080, m);
+		JPEGHTTPServer jpeghttp = new JPEGHTTPServer(8080, m);
+		jpeghttp.start();
 		TCPIPBuilder tcpip = new TCPIPBuilder(m);
 		ClientListener cl = new ClientListener(m);
+		cl.start();
 		tcpip.start();
 	}
 }

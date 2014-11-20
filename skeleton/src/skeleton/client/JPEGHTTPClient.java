@@ -13,11 +13,11 @@ import se.lth.cs.eda040.fakecamera.*; // To gain access to maximum image size
 public class JPEGHTTPClient {
 
 	public static void main(String[] args) {
-		if (args.length!=2) {
-			System.out.println("Syntax: JPEGHTTPClient <address> <port>");
-			System.exit(1);
-		}
-		new GUI(args[0],Integer.parseInt(args[1]));
+//		if (args.length!=2) {
+//			System.out.println("Syntax: JPEGHTTPClient <address> <port>");
+//			System.exit(1);
+//		}
+		new GUI("localhost",8080);
 	}
 
 }
@@ -56,7 +56,8 @@ class ButtonHandler implements ActionListener {
 
 class GUI extends JFrame {
 
-	ImagePanel imagePanel;
+	ImagePanel imagePanelR;
+	ImagePanel imagePanelL;
 	JButton button;
 	boolean firstCall = true;
 	String server;
@@ -67,15 +68,18 @@ class GUI extends JFrame {
 		super();
 		this.server = server;
 		this.port = port;
-		imagePanel = new ImagePanel();
+		imagePanelR = new ImagePanel();
+		imagePanelL = new ImagePanel();
 		button = new JButton("Get image");
 		button.addActionListener(new ButtonHandler(this));
 		this.getContentPane().setLayout(new BorderLayout());
-		this.getContentPane().add(imagePanel, BorderLayout.NORTH);
+		this.getContentPane().add(imagePanelR, BorderLayout.EAST);
+		this.getContentPane().add(imagePanelL, BorderLayout.WEST);
 		this.getContentPane().add(button, BorderLayout.SOUTH);
 		this.setLocationRelativeTo(null);
 		this.pack();
 		refreshImage();
+		this.setResizable(false);
 	}
 
 	public void refreshImage() {
@@ -129,7 +133,8 @@ class GUI extends JFrame {
 		}
 
 
-		imagePanel.refresh(jpeg);
+		imagePanelR.refresh(jpeg);
+		imagePanelL.refresh(jpeg);
 		if (firstCall) {
 			this.pack();
 			this.setVisible(true);

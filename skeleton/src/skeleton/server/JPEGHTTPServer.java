@@ -102,8 +102,8 @@ public class JPEGHTTPServer {
 
 
 					jpeg = m.getImage();
-					byte[] image = new byte[jpeg.length-12];
-					System.arraycopy(jpeg, 11, image, 0, jpeg.length-12);
+					byte[] image = new byte[jpeg.length-13];
+					System.arraycopy(jpeg, 13, image, 0, jpeg.length-13);
 					os.write(image);
 
 				}

@@ -21,8 +21,8 @@ public class ServerListener extends Thread {
 				is = s.getInputStream();
 				connected = true;
 			} catch (IOException e) {
-				System.out.println("Waiting for server at port: " + port
-						+ " to come online.");
+				System.out.println("Waiting for server at addr: " + address
+						+ " port: " + port + " to come online.");
 				try {
 					sleep(3000);
 				} catch (InterruptedException e1) {
@@ -36,16 +36,24 @@ public class ServerListener extends Thread {
 	public void run() {
 		while (true) {
 			try {
-				byte[] data = new byte[131084];
 				int read = 0;
-				while (read < 131084) {
-					int n = is.read(data, read, 131084 - read); // Blocking
+				byte[] packetLength = new byte[4];
+				is.read(packetLength, 0, 4);
+				
+				int length = 0;
+				for (int i = 0; i < packetLength.length; i++)
+				{
+				   length = (length << 8) + (packetLength[i] & 0xff);
+				}
+				byte[] data = new byte[length];
+				
+				while (read < length) {
+					int n = is.read(data, read, length - read); // Blocking
 					if (n == -1)
 						throw new IOException("Corrupted data.");
 					read += n;
 				}
-				monitor.newPackage(data);
-				s.close();
+				monitor.newPackage(data, 1);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

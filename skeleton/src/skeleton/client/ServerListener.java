@@ -11,18 +11,20 @@ public class ServerListener extends Thread {
 	private boolean connected = false;
 	private ClientMonitor monitor;
 
-	public ServerListener(ClientMonitor monitor, String address, int port) {
+	public ServerListener(ClientMonitor monitor, Socket socket) {
 		super();
 		this.monitor = monitor;
+		s = socket;
 		while (!connected) {
 			try {
-				s = new Socket(address, port);
+//				s = new Socket(address, port);
 				System.out.println("Connected to server.");
 				is = s.getInputStream();
 				connected = true;
 			} catch (IOException e) {
+				String address = s.getInetAddress().getHostAddress();
 				System.out.println("Waiting for server at addr: " + address
-						+ " port: " + port + " to come online.");
+						+ " port: " + socket.getPort() + " to come online.");
 				try {
 					sleep(3000);
 				} catch (InterruptedException e1) {

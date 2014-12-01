@@ -39,16 +39,21 @@ public class GUIt extends JFrame implements ItemListener {
 		imagePanelR = new ImagePanel();
 		imagePanelL = new ImagePanel();
 		getContentPane().setLayout(new BorderLayout());
-		getContentPane().add(imagePanelR, BorderLayout.EAST);
-//		getContentPane().add(imagePanelL, BorderLayout.WEST);
+		
+		//add south bar
 		checkboxPanel = new JPanel();
 		checkboxPanel.setLayout(new BorderLayout());
-		getContentPane().add(checkboxPanel, BorderLayout.SOUTH);
 		checkboxPanel.add(movie, BorderLayout.WEST);
 		checkboxPanel.add(synch, BorderLayout.EAST);
+		getContentPane().add(checkboxPanel, BorderLayout.SOUTH);
+		
+		//add images
+		getContentPane().add(imagePanelR, BorderLayout.EAST);
+		getContentPane().add(imagePanelL, BorderLayout.WEST);
+		
 		setLocationRelativeTo(null);
 		pack();
-		setResizable(false);
+		//setResizable(false);
 	
 	}
 
@@ -76,10 +81,11 @@ public class GUIt extends JFrame implements ItemListener {
 		jpeg = newPicture;
 		imagePanelR.refresh(jpeg);
 		imagePanelL.refresh(jpeg);
-		movie.setSelected(movieMode);
+		if(movieMode) movie.setSelected(true);
 		if (firstCall) {
 			this.pack();
 			this.setVisible(true);
+			setResizable(false);
 			firstCall = false;
 		}
 	}

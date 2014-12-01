@@ -53,6 +53,7 @@ public class ServerListener extends Thread {
 						throw new IOException("Corrupted data.");
 					read += n;
 				}
+				//TODO Camera 0 || 1
 				monitor.newPackage(data, 1);
 				
 				

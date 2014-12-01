@@ -64,4 +64,14 @@ public class ClientMonitor {
 		return currentImage;
 	}
 
+	public void uppdateMovieMode(boolean Movie) {
+		
+		
+	}
+
+	public void uppdateSynchMode(boolean b) {
+		
+		
+	}
+
 }

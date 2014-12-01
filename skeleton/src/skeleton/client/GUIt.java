@@ -89,9 +89,16 @@ public class GUIt extends JFrame implements ItemListener {
 		Object source = e.getItemSelectable();
 
 		if (source == movie) {
-
+			if(e.getStateChange()==e.SELECTED) 
+			m.uppdateMovieMode(true);
+			else if(e.getStateChange()==e.DESELECTED) 
+			m.uppdateMovieMode(false);
+			
 		} else if (source == synch) {
-
+			if(e.getStateChange()==e.SELECTED) 
+			m.uppdateSynchMode(true);
+			else if(e.getStateChange()==e.DESELECTED) 
+			m.uppdateSynchMode(false);
 		}
 
 	}

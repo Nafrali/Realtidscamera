@@ -23,8 +23,9 @@ public class ServerWriter extends Thread {
 	public void run() {
 		while (true) {
 			try {
-				monitor.initMovieMode();
-				os.write((byte) 1 % 255);
+				boolean tmp = monitor.initMovieMode();
+				int bit = (tmp == true ? 1 : 0);
+				os.write((byte) bit % 255);
 			} catch (IOException e) {
 				System.out.println("[ServerWriter] (run) transmition error");
 				e.printStackTrace();

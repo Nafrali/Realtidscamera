@@ -1,26 +1,30 @@
 package skeleton.client;
 
 public class ClientMonitor {
-	private boolean movieMode;
-	private boolean cameraMode[];
+//	private boolean movieMode;
+	private boolean cameraMovie[];
 	private byte[] currentPackage;
 	private byte[] currentImage;
 	private boolean newPicture = false;
+	
 
 	public ClientMonitor() {
-		movieMode = false;
 		currentPackage = new byte[131084];
-		cameraMode = new boolean[2];
-	}
-
-	public void changeMode(boolean newMode, int cameraNbr) {
+		cameraMovie = new boolean[2];
 		
 	}
+
+	private void changeMode(boolean newMode, int cameraNbr) {
+		cameraMovie[cameraNbr] = newMode;
+	}
 	
-	public synchronized void initMovieMode() throws InterruptedException {
-		while (!movieMode) {
+	private boolean isMovie() {
+		return (cameraMovie[0] || cameraMovie[1]);
+	}
+	
+	public synchronized boolean initMovieMode() throws InterruptedException {
 			wait();
-		}
+			return isMovie();
 	}
 
 	public synchronized void newPackage(byte[] data, int cameraNbr) {
@@ -43,7 +47,8 @@ public class ClientMonitor {
 		System.arraycopy(currentPackage, 1, timestamp, 0, 8);
 		System.arraycopy(currentPackage, 9, image, 0, currentPackage.length - 9);
 
-//		boolean tmp = 
+		boolean tmp = (motion[0] == 1 ? true : false);
+		changeMode(tmp, cameraNbr);
 		
 		currentImage = image;
 		newPicture = true;

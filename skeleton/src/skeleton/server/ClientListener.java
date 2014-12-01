@@ -35,6 +35,8 @@ public class ClientListener extends Thread {
 				if (data[0] == 1) {
 					monitor.setMovieMode(true);
 				}
+				else
+					monitor.setMovieMode(false);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

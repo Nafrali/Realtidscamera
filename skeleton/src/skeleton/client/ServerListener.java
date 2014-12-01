@@ -11,20 +11,18 @@ public class ServerListener extends Thread {
 	private boolean connected = false;
 	private ClientMonitor monitor;
 
-	public ServerListener(ClientMonitor monitor, Socket socket) {
+	public ServerListener(ClientMonitor monitor, String address, int port) {
 		super();
 		this.monitor = monitor;
-		s = socket;
 		while (!connected) {
 			try {
-//				s = new Socket(address, port);
+				s = new Socket(address, port);
 				System.out.println("Connected to server.");
 				is = s.getInputStream();
 				connected = true;
 			} catch (IOException e) {
-				String address = s.getInetAddress().getHostAddress();
 				System.out.println("Waiting for server at addr: " + address
-						+ " port: " + socket.getPort() + " to come online.");
+						+ " port: " + port + " to come online.");
 				try {
 					sleep(3000);
 				} catch (InterruptedException e1) {
@@ -41,14 +39,13 @@ public class ServerListener extends Thread {
 				int read = 0;
 				byte[] packetLength = new byte[4];
 				is.read(packetLength, 0, 4);
-				
+
 				int length = 0;
-				for (int i = 0; i < packetLength.length; i++)
-				{
-				   length = (length << 8) + (packetLength[i] & 0xff);
+				for (int i = 0; i < packetLength.length; i++) {
+					length = (length << 8) + (packetLength[i] & 0xff);
 				}
 				byte[] data = new byte[length];
-				
+
 				while (read < length) {
 					int n = is.read(data, read, length - read); // Blocking
 					if (n == -1)
@@ -56,6 +53,7 @@ public class ServerListener extends Thread {
 					read += n;
 				}
 				monitor.newPackage(data, 1);
+
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

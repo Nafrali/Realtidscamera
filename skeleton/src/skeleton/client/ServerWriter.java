@@ -8,10 +8,10 @@ public class ServerWriter extends Thread {
 	private OutputStream os;
 	private ClientMonitor monitor; 
 
-	public ServerWriter(ClientMonitor m, Socket socket) {
+	public ServerWriter(ClientMonitor m, String address, int port) {
 		super();
 		try {
-			s = socket;
+			s = new Socket(address, port);
 			monitor = m;
 			os = s.getOutputStream();
 		} catch (IOException e) {

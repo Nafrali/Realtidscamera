@@ -72,10 +72,11 @@ public class GUIt extends JFrame implements ItemListener {
 		}
 	}
 
-	public void refreshImage(byte[] newPicture) {
+	public void refreshImage(byte[] newPicture, boolean movieMode) {
 		jpeg = newPicture;
 		imagePanelR.refresh(jpeg);
 		imagePanelL.refresh(jpeg);
+		movie.setSelected(movieMode);
 		if (firstCall) {
 			this.pack();
 			this.setVisible(true);
@@ -89,15 +90,15 @@ public class GUIt extends JFrame implements ItemListener {
 		Object source = e.getItemSelectable();
 
 		if (source == movie) {
-			if(e.getStateChange()==e.SELECTED) 
+			if(e.getStateChange()==ItemEvent.SELECTED) 
 			m.uppdateMovieMode(true);
-			else if(e.getStateChange()==e.DESELECTED) 
+			else if(e.getStateChange()==ItemEvent.DESELECTED) 
 			m.uppdateMovieMode(false);
 			
 		} else if (source == synch) {
-			if(e.getStateChange()==e.SELECTED) 
+			if(e.getStateChange()==ItemEvent.SELECTED) 
 			m.uppdateSynchMode(true);
-			else if(e.getStateChange()==e.DESELECTED) 
+			else if(e.getStateChange()==ItemEvent.DESELECTED) 
 			m.uppdateSynchMode(false);
 		}
 

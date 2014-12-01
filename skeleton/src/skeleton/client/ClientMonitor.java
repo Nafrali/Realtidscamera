@@ -46,14 +46,11 @@ public class ClientMonitor {
 		// System.out.println("MotionDetected 2: " + motion[0]);
 		System.arraycopy(currentPackage, 1, timestamp, 0, 8);
 		System.arraycopy(currentPackage, 9, image, 0, currentPackage.length - 9);
-<<<<<<< HEAD
-	
-=======
+
 
 		boolean tmp = (motion[0] == 1 ? true : false);
 		changeMode(tmp, cameraNbr);
 		
->>>>>>> 5ee768e346b2d982a645f7f5782d468d5bc7fd07
 		currentImage = image;
 		newPicture = true;
 		notifyAll();

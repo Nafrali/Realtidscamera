@@ -19,6 +19,7 @@ public class GUIt extends JFrame implements ItemListener {
 	JPanel checkboxPanel;
 	JCheckBox movie;
 	JCheckBox synch;
+	JLabel[] delays = new JLabel[2];
 	boolean firstCall = true;
 	byte[] jpeg = new byte[AxisM3006V.IMAGE_BUFFER_SIZE];
 
@@ -26,6 +27,9 @@ public class GUIt extends JFrame implements ItemListener {
 		super();
 		this.m = m;
 
+		delays[0]= new JLabel("1");
+		delays[1]=new JLabel("2");
+		
 		movie = new JCheckBox("Movie mode");
 		movie.setMnemonic(KeyEvent.VK_M);
 		movie.setSelected(true);
@@ -42,9 +46,14 @@ public class GUIt extends JFrame implements ItemListener {
 		
 		//add south bar
 		checkboxPanel = new JPanel();
+		JPanel textBoxes = new JPanel();
+		textBoxes.setSize(300, 20);
 		checkboxPanel.setLayout(new BorderLayout());
 		checkboxPanel.add(movie, BorderLayout.WEST);
 		checkboxPanel.add(synch, BorderLayout.EAST);
+		checkboxPanel.add(textBoxes,BorderLayout.CENTER);
+		textBoxes.add(delays[0],BorderLayout.WEST);
+		textBoxes.add(delays[1],BorderLayout.EAST);
 		getContentPane().add(checkboxPanel, BorderLayout.SOUTH);
 		
 		//add images
@@ -53,8 +62,7 @@ public class GUIt extends JFrame implements ItemListener {
 		
 		setLocationRelativeTo(null);
 		pack();
-		//setResizable(false);
-	
+			
 	}
 
 	class ImagePanel extends JPanel {

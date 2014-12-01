@@ -36,7 +36,7 @@ public class ClientMonitor {
 		// System.out.println("MotionDetected 2: " + motion[0]);
 		System.arraycopy(currentPackage, 1, timestamp, 0, 8);
 		System.arraycopy(currentPackage, 9, image, 0, currentPackage.length - 9);
-
+	
 		currentImage = image;
 		newPicture = true;
 		notifyAll();
@@ -57,12 +57,10 @@ public class ClientMonitor {
 	}
 
 	public void uppdateMovieMode(boolean Movie) {
-		
-		
+
 	}
 
 	public void uppdateSynchMode(boolean b) {
-		
 		
 	}
 

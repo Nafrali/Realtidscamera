@@ -6,7 +6,8 @@ public class ClientMonitor {
 	private byte[] currentPackage;
 	private byte[] currentImage;
 	private boolean newPicture = false;
-	
+	private boolean guiMovie = false;
+	private boolean guiSynch = false;
 
 	public ClientMonitor() {
 		currentPackage = new byte[131084];
@@ -19,7 +20,7 @@ public class ClientMonitor {
 	}
 	
 	private boolean isMovie() {
-		return (cameraMovie[0] || cameraMovie[1]);
+		return (cameraMovie[0] || cameraMovie[1] || guiMovie);
 	}
 	
 	public synchronized boolean initMovieMode() throws InterruptedException {
@@ -70,12 +71,18 @@ public class ClientMonitor {
 		return currentImage;
 	}
 
-	public void uppdateMovieMode(boolean Movie) {
-
+	public synchronized void uppdateMovieMode(boolean movie) {
+		guiMovie=movie;
+		notifyAll();
 	}
 
-	public void uppdateSynchMode(boolean b) {
-		
+	public void uppdateSynchMode(boolean synch) {
+		guiSynch = synch;
+		notifyAll();
+	}
+
+	public boolean cameraInMovie() {
+		return ((cameraMovie[0]||cameraMovie[1]) & !guiMovie);
 	}
 
 }

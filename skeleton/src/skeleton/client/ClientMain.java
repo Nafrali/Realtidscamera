@@ -1,5 +1,9 @@
 package skeleton.client;
 
+import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
 public class ClientMain {
 
 	public static void main(String[] args) {
@@ -9,11 +13,16 @@ public class ClientMain {
 		GUIt gui = new GUIt(monitor);
 		GuiThread guiThread = new GuiThread(monitor, gui);
 		guiThread.start();
-		ServerListener sl = new ServerListener(monitor, "localhost", 5555);
-		ServerWriter sw = new ServerWriter(monitor, "localhost", 5555);
 
-		sl.start();
-		sw.start();
+		ClientSocket cs = new ClientSocket(monitor, "localhost", 5555, 0); //Nu börjar cameraNbr på 0
+		cs.start();
+		
+		
+//		ServerListener2 sl = new ServerListener2(monitor, s);
+//		ServerWriter2 sw = new ServerWriter2(monitor, "localhost", 5555);
+
+//		sl.start();
+//		sw.start();
 
 	}
 }

@@ -8,10 +8,9 @@ public class ServerMain {
 		c.start();
 		JPEGHTTPServer jpeghttp = new JPEGHTTPServer(8080, m);
 		jpeghttp.start();
-		TCPIPBuilder tcpip = new TCPIPBuilder(m);
-		ClientListener cl = new ClientListener(m);
-		cl.start();
-		tcpip.start();
+		ServerSocketHandler ssh = new ServerSocketHandler(m);
+		ssh.start();
+
 
 	}
 }

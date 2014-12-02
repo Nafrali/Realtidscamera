@@ -25,6 +25,5 @@ public class ClientMain {
 
 //		sl.start();
 //		sw.start();
-//hej
 	}
 }

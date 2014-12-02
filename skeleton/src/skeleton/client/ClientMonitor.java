@@ -7,10 +7,10 @@ public class ClientMonitor {
 	private byte[][] currentImage;
 	private int lastImageNbr;
 	private boolean newPicture = false;
-	private boolean guiMovie = false;
 	private boolean guiSynch = false;
 	private boolean newMovieSetting = false;
-	
+
+	private boolean GuiMovieMode =false;
 
 	public ClientMonitor() {
 		currentImage = new byte[2][];
@@ -23,13 +23,13 @@ public class ClientMonitor {
 		return lastImageNbr;
 	}
 
-	private void changeMode(boolean newMode, int cameraNbr) {
+	private void changeMotion(boolean newMode, int cameraNbr) {
 		cameraMovie[cameraNbr] = newMode;
 	}
 
 	private boolean isMovie() {
 
-		return (cameraMovie[0] || cameraMovie[1] || guiMovie);
+		return (cameraMovie[1] || cameraMovie[2] || GuiMovieMode);
 	}
 
 	public synchronized boolean initMovieMode() throws InterruptedException {
@@ -60,7 +60,7 @@ public class ClientMonitor {
 		System.arraycopy(currentPackage, 9, image, 0, currentPackage.length - 9);
 
 		boolean tmp = (motion[0] == 1 ? true : false);
-		changeMode(tmp, cameraNbr);
+		changeMotion(tmp, cameraNbr);
 
 		// TODO 2 kameror
 
@@ -85,7 +85,7 @@ public class ClientMonitor {
 	}
 
 	public synchronized void uppdateMovieMode(boolean movie) {
-		guiMovie = movie;
+		GuiMovieMode = movie;
 		notifyAll();
 	}
 

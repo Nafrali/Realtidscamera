@@ -35,9 +35,9 @@ public class GUIt extends JFrame implements ItemListener {
 		delays[0] = new JLabel("Camera 1");
 		delays[1] = new JLabel("Camera 2");
 
-		movie = new JCheckBox("Movie mode");
+		movie = new JCheckBox("Force movie mode");
 		movie.setMnemonic(KeyEvent.VK_M);
-		movie.setSelected(true);
+		movie.setSelected(false);
 		movie.addItemListener(this);
 
 		synch = new JCheckBox("Synchronized mode");
@@ -96,8 +96,14 @@ public class GUIt extends JFrame implements ItemListener {
 		jpeg = newPicture;
 		imagePanelR.refresh(jpeg);
 		imagePanelL.refresh(jpeg);
-		if (movieMode)
-			movie.setSelected(true);
+		if (movieMode) {
+			delays[0].setText("Camera 1: Movie mode active.");
+			delays[1].setText("Camera 2: Movie mode active.");
+		}
+		else if(!movieMode){
+			delays[0].setText("Camera 1: Movie mode inactive.");
+			delays[1].setText("Camera 2: Movie mode inactive.");
+		}
 		if (firstCall) {
 			this.pack();
 			this.setVisible(true);
@@ -116,6 +122,8 @@ public class GUIt extends JFrame implements ItemListener {
 				m.uppdateMovieMode(true);
 			else if (e.getStateChange() == ItemEvent.DESELECTED)
 				m.uppdateMovieMode(false);
+			delays[0].setText("Camera 1: Movie mode inactive.");
+			delays[1].setText("Camera 2: Movie mode inactive.");
 
 		} else if (source == synch) {
 			if (e.getStateChange() == ItemEvent.SELECTED)
@@ -125,5 +133,4 @@ public class GUIt extends JFrame implements ItemListener {
 		}
 
 	}
-
 }

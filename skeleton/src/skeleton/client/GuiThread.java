@@ -1,11 +1,13 @@
 package skeleton.client;
 
+import GUI.GUI;
+
 public class GuiThread extends Thread {
 
 	ClientMonitor m;
-	GUIt gui;
+	GUI gui;
 
-	public GuiThread(ClientMonitor m, GUIt gui) {
+	public GuiThread(ClientMonitor m, GUI gui) {
 		super();
 		this.m = m;
 		this.gui = gui;
@@ -13,7 +15,7 @@ public class GuiThread extends Thread {
 
 	public void run() {
 		while (true) {
-			gui.refreshImage(m.getLatestImage(), m.camerInMovie());
+			gui.refreshImage(m.getLatestImage(), m.cameraInMovie(), m.getCameraNbr());
 		}
 	}
 

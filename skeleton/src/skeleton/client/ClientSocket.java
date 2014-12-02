@@ -3,6 +3,7 @@ package skeleton.client;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 
 public class ClientSocket extends Thread {
@@ -23,13 +24,10 @@ public class ClientSocket extends Thread {
 	}
 
 	private void createWriter() {
-		try {
-			sw = new ServerWriter(monitor, s.getOutputStream());
-			System.out.println("ServerWriter created");
-			sw.start();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-		}
+		sw = new ServerWriter(monitor, s);
+		System.out.println("ServerWriter created");
+		sw.start();
+
 	}
 
 	private void destroyWriter() {
@@ -78,7 +76,6 @@ public class ClientSocket extends Thread {
 					destroyWriter();
 					connect();
 				} else {
-
 					int length = 0;
 					for (int i = 0; i < packetLength.length; i++) {
 						length = (length << 8) + (packetLength[i] & 0xff);
@@ -98,7 +95,18 @@ public class ClientSocket extends Thread {
 				// TODO Camera 0 || 1
 				// Detta ska väl göras innan den senaste } ?
 //				 monitor.newPackage(data, cameraNbr);
-			} catch (IOException e) {
+			} catch (SocketException e) {
+				try {
+					s.close();
+					destroyWriter();
+					connect();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+			}
+			catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

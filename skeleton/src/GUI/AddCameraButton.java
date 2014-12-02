@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-
-import GUI.GUI.ImagePanel;
 import skeleton.client.ClientMonitor;
 import skeleton.client.ClientSocket;
 
@@ -44,8 +42,7 @@ public class AddCameraButton extends JMenuItem implements ActionListener {
 					camList.size());
 			camList.add(tmp);
 			tmp.start();
-			ImagePanel cam = new ImagePanel();
-			imagePanels.add(cam);
+			gui.addCamera();
 
 		} catch (Exception e1) {
 		}

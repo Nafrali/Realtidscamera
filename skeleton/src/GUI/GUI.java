@@ -1,14 +1,16 @@
-package skeleton.client;
+package GUI;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -16,56 +18,42 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 import se.lth.cs.eda040.fakecamera.AxisM3006V;
+import skeleton.client.ClientMonitor;
+import skeleton.client.ClientSocket;
 
-public class GUIt extends JFrame implements ItemListener {
+public class GUI extends JFrame implements ItemListener {
 
 	ClientMonitor m;
-	ImagePanel imagePanelR;
-	ImagePanel imagePanelL;
-	ArrayList<ImagePanel> panelList = null;
-	ArrayList<JLabel> delayList = null;
-	ArrayList<ClientSocket> feedList = null;
+	ArrayList<ClientSocket> camList;
+	ArrayList<ImagePanel> imagePanels;
 	JPanel displayPanel;
 	JCheckBox movie;
 	JCheckBox synch;
-	JLabel[] delays = new JLabel[2];
-	JTextArea actionLogArea = new JTextArea();
+	JPanel camDisplay;
+	JLabel[] delays = new JLabel[4];
+	JTextField actionLogArea = new JTextField();
 	boolean firstCall = true;
 	byte[] jpeg = new byte[AxisM3006V.IMAGE_BUFFER_SIZE];
 
-	public GUIt(ClientMonitor m) {
+	public GUI(ClientMonitor m) {
 		super();
 		this.m = m;
-
-		panelList = new ArrayList<ImagePanel>();
-		delayList = new ArrayList<JLabel>();
-		feedList = new ArrayList<ClientSocket>();
-
+		getContentPane().setLayout(new BorderLayout());
+		camList = new ArrayList<ClientSocket>();
+		imagePanels = new ArrayList<ImagePanel>();
 		delays[0] = new JLabel("Camera 1");
 		delays[1] = new JLabel("Camera 2");
+		addMovieCheckbox();
+		addSyncCheckbox();
+		addMenu();
+		camDisplay = new JPanel();
+		camDisplay.setLayout(new GridLayout(2, 2));
 
-		movie = new JCheckBox("Force movie mode");
-		movie.setMnemonic(KeyEvent.VK_M);
-		movie.setSelected(false);
-		movie.addItemListener(this);
-
-		synch = new JCheckBox("Synchronized mode");
-		synch.setMnemonic(KeyEvent.VK_S);
-		synch.setSelected(true);
-		synch.addItemListener(this);
-
-		imagePanelR = new ImagePanel();
-		imagePanelL = new ImagePanel();
-		getContentPane().setLayout(new BorderLayout());
-		JPanel camDisplay = new JPanel();
-		camDisplay.setLayout(new GridLayout(0, 2));
-
-		// add south bar
 		displayPanel = new JPanel();
 		JPanel checkBoxPanel = new JPanel();
 		displayPanel.setLayout(new GridLayout(0, 2));
@@ -76,39 +64,29 @@ public class GUIt extends JFrame implements ItemListener {
 		displayPanel.add(delays[1]);
 		displayPanel.add(actionLogArea);
 		displayPanel.add(checkBoxPanel);
-		camDisplay.add(imagePanelL);
-		camDisplay.add(imagePanelR);
-		getContentPane().add(camDisplay, BorderLayout.NORTH);
+		try {
+			BufferedImage nocamfeed = ImageIO.read(new File(
+					"../files/nocamfeed.jpg"));
+			for (int i = 0; i < 4; i++)
+				camDisplay.add(new JLabel(new ImageIcon(nocamfeed)));
+		} catch (IOException ex) {
+			System.out.println("\"No camera feed\" image not found.");
+		}
+		// camDisplay.add(imagePanelL);
+		// camDisplay.add(imagePanelR);
+		getContentPane().add(camDisplay, BorderLayout.CENTER);
 		getContentPane().add(displayPanel, BorderLayout.SOUTH);
 
+		setLocationRelativeTo(null);
 		pack();
+		setVisible(true);
+		setResizable(false);
 
 	}
 
-	class ImagePanel extends JPanel {
-		ImageIcon icon;
-		JLabel label;
-
-		public ImagePanel() {
-			super();
-			icon = new ImageIcon();
-			label = new JLabel(icon);
-
-			add(label, BorderLayout.CENTER);
-			this.setSize(200, 200);
-		}
-
-		public void refresh(byte[] data) {
-
-			label.setIcon(new ImageIcon(data));
-
-		}
-	}
-
-	public void refreshImage(byte[] newPicture, boolean movieMode) {
+	public void refreshImage(byte[] newPicture, boolean movieMode, int imgNbr) {
 		jpeg = newPicture;
-		imagePanelR.refresh(jpeg);
-		imagePanelL.refresh(jpeg);
+		imagePanels.get(imgNbr).refresh(jpeg);
 		if (movieMode) {
 			delays[0].setText("Camera 1: Movie mode active.");
 			delays[1].setText("Camera 2: Movie mode active.");
@@ -117,13 +95,6 @@ public class GUIt extends JFrame implements ItemListener {
 		 else if (!movieMode) {
 			delays[0].setText("Camera 1: Movie mode inactive.");
 			delays[1].setText("Camera 2: Movie mode inactive.");
-		}
-		
-		if (firstCall) {
-			this.pack();
-			this.setVisible(true);
-			setResizable(false);
-			firstCall = false;
 		}
 	}
 
@@ -150,5 +121,37 @@ public class GUIt extends JFrame implements ItemListener {
 				m.uppdateSynchMode(false);
 		}
 
+	}
+
+	private void addMenu() {
+		JMenuBar menuBar = new JMenuBar();
+		JMenu menu = new JMenu("Menu");
+		menu.setMnemonic(KeyEvent.VK_A);
+		JMenuItem addCam = new AddCameraButton(this, m, camList, imagePanels);
+		menu.add(addCam);
+		menuBar.add(menu);
+		add(menuBar, BorderLayout.NORTH);
+	}
+
+	private void addMovieCheckbox() {
+		movie = new JCheckBox("Force movie mode");
+		movie.setMnemonic(KeyEvent.VK_M);
+		movie.setSelected(false);
+		movie.addItemListener(this);
+	}
+
+	private void addSyncCheckbox() {
+		synch = new JCheckBox("Synchronized mode");
+		synch.setMnemonic(KeyEvent.VK_S);
+		synch.setSelected(true);
+		synch.addItemListener(this);
+	}
+
+	public void addCamera() {
+		ImagePanel newCam = new ImagePanel();
+		imagePanels.add(newCam);
+		camDisplay.remove(camList.size() - 1);
+		camDisplay.add(newCam, camList.size() - 1);
+		pack();
 	}
 }

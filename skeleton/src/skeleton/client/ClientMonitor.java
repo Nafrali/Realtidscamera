@@ -49,6 +49,8 @@ public class ClientMonitor {
 	private void handlePackage(int cameraNbr) {
 		byte[] motion = new byte[1];
 		byte[] timestamp = new byte[8];
+		if(currentPackage.length - 9 < 0)
+			return;
 		byte[] image = new byte[currentPackage.length - 9];
 
 		// System.out.println(currentPackage.toString().indexOf('\r'));
@@ -92,8 +94,7 @@ public class ClientMonitor {
 		notifyAll();
 	}
 
-	public boolean camerInMovie() {
+	public boolean cameraInMovie() {
 		return isMovie();
 	}
-
 }

@@ -16,8 +16,8 @@ public class ClientMain {
 
 		ClientSocket cs = new ClientSocket(monitor, "localhost", 5555, 0); //Nu börjar cameraNbr på 0
 		cs.start();
-		
-		
+		ClientSocket cs2 = new ClientSocket(monitor, "localhost", 5556, 1); //Nu börjar cameraNbr på 0
+		cs2.start();
 //		ServerListener2 sl = new ServerListener2(monitor, s);
 //		ServerWriter2 sw = new ServerWriter2(monitor, "localhost", 5555);
 

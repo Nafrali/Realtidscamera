@@ -19,6 +19,7 @@ public class GUIt extends JFrame implements ItemListener {
 	JPanel checkboxPanel;
 	JCheckBox movie;
 	JCheckBox synch;
+	JLabel[] delays = new JLabel[2];
 	boolean firstCall = true;
 	byte[] jpeg = new byte[AxisM3006V.IMAGE_BUFFER_SIZE];
 
@@ -26,6 +27,9 @@ public class GUIt extends JFrame implements ItemListener {
 		super();
 		this.m = m;
 
+		delays[0]= new JLabel("1");
+		delays[1]=new JLabel("2");
+		
 		movie = new JCheckBox("Movie mode");
 		movie.setMnemonic(KeyEvent.VK_M);
 		movie.setSelected(true);
@@ -39,17 +43,26 @@ public class GUIt extends JFrame implements ItemListener {
 		imagePanelR = new ImagePanel();
 		imagePanelL = new ImagePanel();
 		getContentPane().setLayout(new BorderLayout());
-		getContentPane().add(imagePanelR, BorderLayout.EAST);
-//		getContentPane().add(imagePanelL, BorderLayout.WEST);
+		
+		//add south bar
 		checkboxPanel = new JPanel();
+		JPanel textBoxes = new JPanel();
+		textBoxes.setSize(300, 20);
 		checkboxPanel.setLayout(new BorderLayout());
-		getContentPane().add(checkboxPanel, BorderLayout.SOUTH);
 		checkboxPanel.add(movie, BorderLayout.WEST);
 		checkboxPanel.add(synch, BorderLayout.EAST);
+		checkboxPanel.add(textBoxes,BorderLayout.CENTER);
+		textBoxes.add(delays[0],BorderLayout.WEST);
+		textBoxes.add(delays[1],BorderLayout.EAST);
+		getContentPane().add(checkboxPanel, BorderLayout.SOUTH);
+		
+		//add images
+		getContentPane().add(imagePanelR, BorderLayout.EAST);
+		getContentPane().add(imagePanelL, BorderLayout.WEST);
+		
 		setLocationRelativeTo(null);
 		pack();
-		setResizable(false);
-	
+			
 	}
 
 	class ImagePanel extends JPanel {
@@ -76,10 +89,11 @@ public class GUIt extends JFrame implements ItemListener {
 		jpeg = newPicture;
 		imagePanelR.refresh(jpeg);
 		imagePanelL.refresh(jpeg);
-		movie.setSelected(movieMode);
+		if(movieMode) movie.setSelected(true);
 		if (firstCall) {
 			this.pack();
 			this.setVisible(true);
+			setResizable(false);
 			firstCall = false;
 		}
 	}

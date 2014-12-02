@@ -66,6 +66,9 @@ public class ServerListener extends Thread {
 					}
 					monitor.newPackage(data, 1);
 				}
+
+				//TODO Camera 0 || 1
+//				monitor.newPackage(data, 1);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

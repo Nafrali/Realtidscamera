@@ -45,6 +45,7 @@ public class ServerWriter extends Thread {
 		while (true) {
 			try {
 				boolean tmp = monitor.initMovieMode();
+				
 				int bit = (tmp == true ? 1 : 0);
 				pw.write(bit);
 //				os.write((byte) bit % 255);

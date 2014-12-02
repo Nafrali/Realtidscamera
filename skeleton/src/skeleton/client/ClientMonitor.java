@@ -4,14 +4,17 @@ public class ClientMonitor {
 //	private boolean movieMode;
 	private boolean cameraMovie[];
 	private byte[] currentPackage;
-	private byte[] currentImage;
+	private byte[] currentImageOne;
+	private byte[] currentImageTwo;
 	private boolean newPicture = false;
 	private boolean guiMovie = false;
 	private boolean guiSynch = false;
+	private boolean newMovieSetting = false;
 
 	public ClientMonitor() {
 		currentPackage = new byte[131084];
 		cameraMovie = new boolean[2];
+		
 		
 	}
 
@@ -20,6 +23,7 @@ public class ClientMonitor {
 	}
 	
 	private boolean isMovie() {
+		
 		return (cameraMovie[0] || cameraMovie[1] || guiMovie);
 	}
 	
@@ -52,7 +56,9 @@ public class ClientMonitor {
 		boolean tmp = (motion[0] == 1 ? true : false);
 		changeMode(tmp, cameraNbr);
 		
-		currentImage = image;
+		//TODO 2 kameror
+		
+		currentImageOne = image;
 		newPicture = true;
 		notifyAll();
 
@@ -68,7 +74,7 @@ public class ClientMonitor {
 			}
 		}
 		newPicture = false;
-		return currentImage;
+		return currentImageOne;
 	}
 
 	public synchronized void uppdateMovieMode(boolean movie) {
@@ -82,7 +88,7 @@ public class ClientMonitor {
 	}
 
 	public boolean cameraInMovie() {
-		return ((cameraMovie[0]||cameraMovie[1]) & !guiMovie);
+		return (newMovieSetting);
 	}
 
 }

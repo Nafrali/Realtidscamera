@@ -1,114 +1,146 @@
 package GUI;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
- 
-public class GUI extends JFrame {
-    static final String gapList[] = {"0", "10", "15", "20"};
-    final static int maxGap = 20;
-    JComboBox horGapComboBox;
-    JComboBox verGapComboBox;
-    JButton applyButton = new JButton("Apply gaps");
-    GridLayout experimentLayout = new GridLayout(0,2);
-     
-    public GUI(String name) {
-        super(name);
-        setResizable(false);
-    }
-     
-    public void initGaps() {
-        horGapComboBox = new JComboBox(gapList);
-        verGapComboBox = new JComboBox(gapList);
-    }
-     
-    public void addComponentsToPane(final Container pane) {
-        initGaps();
-        final JPanel compsToExperiment = new JPanel();
-        compsToExperiment.setLayout(experimentLayout);
-        JPanel controls = new JPanel();
-        controls.setLayout(new GridLayout(2,3));
-         
-        //Set up components preferred size
-        JButton b = new JButton("Just fake button");
-        Dimension buttonSize = b.getPreferredSize();
-        compsToExperiment.setPreferredSize(new Dimension((int)(buttonSize.getWidth() * 2.5)+maxGap,
-                (int)(buttonSize.getHeight() * 3.5)+maxGap * 2));
-         
-        //Add buttons to experiment with Grid Layout
-        compsToExperiment.add(new JButton("Button 1"));
-        compsToExperiment.add(new JButton("Button 2"));
-        compsToExperiment.add(new JButton("Button 3"));
-        compsToExperiment.add(new JButton("Long-Named Button 4"));
-        compsToExperiment.add(new JButton("5"));
-         
-        //Add controls to set up horizontal and vertical gaps
-        controls.add(new Label("Horizontal gap:"));
-        controls.add(new Label("Vertical gap:"));
-        controls.add(new Label(" "));
-        controls.add(horGapComboBox);
-        controls.add(verGapComboBox);
-        controls.add(applyButton);
-         
-        //Process the Apply gaps button press
-        applyButton.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){
-                //Get the horizontal gap value
-                String horGap = (String)horGapComboBox.getSelectedItem();
-                //Get the vertical gap value
-                String verGap = (String)verGapComboBox.getSelectedItem();
-                //Set up the horizontal gap value
-                experimentLayout.setHgap(Integer.parseInt(horGap));
-                //Set up the vertical gap value
-                experimentLayout.setVgap(Integer.parseInt(verGap));
-                //Set up the layout of the buttons
-                experimentLayout.layoutContainer(compsToExperiment);
-            }
-        });
-        pane.add(compsToExperiment, BorderLayout.NORTH);
-        pane.add(new JSeparator(), BorderLayout.CENTER);
-        pane.add(controls, BorderLayout.SOUTH);
-    }
-     
-    /**
-     * Create the GUI and show it.  For thread safety,
-     * this method is invoked from the
-     * event dispatch thread.
-     */
-    private static void createAndShowGUI() {
-        //Create and set up the window.
-        GUI frame = new GUI("GridLayoutDemo");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //Set up the content pane.
-        frame.addComponentsToPane(frame.getContentPane());
-        //Display the window.
-        frame.pack();
-        frame.setVisible(true);
-    }
-     
-    public static void main(String[] args) {
-        /* Use an appropriate Look and Feel */
-        try {
-            //UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-            UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
-        } catch (UnsupportedLookAndFeelException ex) {
-            ex.printStackTrace();
-        } catch (IllegalAccessException ex) {
-            ex.printStackTrace();
-        } catch (InstantiationException ex) {
-            ex.printStackTrace();
-        } catch (ClassNotFoundException ex) {
-            ex.printStackTrace();
-        }
-        /* Turn off metal's use of bold fonts */
-        UIManager.put("swing.boldMetal", Boolean.FALSE);
-         
-        //Schedule a job for the event dispatch thread:
-        //creating and showing this application's GUI.
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                createAndShowGUI();
-            }
-        });
-    }
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+
+import se.lth.cs.eda040.fakecamera.AxisM3006V;
+import skeleton.client.ClientMonitor;
+import skeleton.client.ClientSocket;
+
+public class GUI extends JFrame implements ItemListener {
+
+	ClientMonitor m;
+	ArrayList<ClientSocket> camList;
+	
+	ArrayList<ImagePanel> imagePanels;
+	JPanel displayPanel;
+	JCheckBox movie;
+	JCheckBox synch;
+	JLabel[] delays = new JLabel[2];
+	JTextArea actionLogArea = new JTextArea();
+	boolean firstCall = true;
+	byte[] jpeg = new byte[AxisM3006V.IMAGE_BUFFER_SIZE];
+
+	public GUI(ClientMonitor m) {
+		super();
+		this.m = m;
+		getContentPane().setLayout(new BorderLayout());
+		camList = new ArrayList<ClientSocket>();
+		imagePanels = new ArrayList<ImagePanel>();
+		delays[0] = new JLabel("Camera 1");
+		delays[1] = new JLabel("Camera 2");
+		addMovieCheckbox();
+		addSyncCheckbox();
+		addMenu();
+		JPanel camDisplay = new JPanel();
+		camDisplay.setLayout(new GridLayout(2, 2));
+		
+		displayPanel = new JPanel();
+		JPanel checkBoxPanel = new JPanel();
+		displayPanel.setLayout(new GridLayout(0, 2));
+		checkBoxPanel.setLayout(new BorderLayout());
+		checkBoxPanel.add(movie, BorderLayout.WEST);
+		checkBoxPanel.add(synch, BorderLayout.EAST);
+		displayPanel.add(delays[0]);
+		displayPanel.add(delays[1]);
+		displayPanel.add(actionLogArea);
+		displayPanel.add(checkBoxPanel);
+		try {
+			BufferedImage nocamfeed = ImageIO.read(new File(
+					"../files/nocamfeed.jpg"));
+			for(int i = 0; i < 4 ;i++)
+			camDisplay.add(new JLabel(new ImageIcon(nocamfeed)));
+		} catch (IOException ex) {
+			System.out.println("\"No camera feed\" image not found.");
+		}
+//		camDisplay.add(imagePanelL);
+//		camDisplay.add(imagePanelR);
+		getContentPane().add(camDisplay, BorderLayout.NORTH);
+		getContentPane().add(displayPanel, BorderLayout.SOUTH);
+
+		setLocationRelativeTo(null);
+		pack();
+		setVisible(true);
+		setResizable(false);
+
+	}
+
+
+	public void refreshImage(byte[] newPicture, boolean movieMode, int imgNbr) {
+		jpeg = newPicture;
+		imagePanels.get(imgNbr).refresh(jpeg);
+		if (movieMode) {
+			delays[0].setText("Camera 1: Movie mode active.");
+			delays[1].setText("Camera 2: Movie mode active.");
+		} else if (!movieMode) {
+			delays[0].setText("Camera 1: Movie mode inactive.");
+			delays[1].setText("Camera 2: Movie mode inactive.");
+		}
+	}
+
+	@Override
+	public void itemStateChanged(ItemEvent e) {
+
+		Object source = e.getItemSelectable();
+
+		if (source == movie) {
+			if (e.getStateChange() == ItemEvent.SELECTED)
+				m.uppdateMovieMode(true);
+			else if (e.getStateChange() == ItemEvent.DESELECTED)
+				m.uppdateMovieMode(false);
+			delays[0].setText("Camera 1: Movie mode inactive.");
+			delays[1].setText("Camera 2: Movie mode inactive.");
+
+		} else if (source == synch) {
+			if (e.getStateChange() == ItemEvent.SELECTED)
+				m.uppdateSynchMode(true);
+			else if (e.getStateChange() == ItemEvent.DESELECTED)
+				m.uppdateSynchMode(false);
+		}
+
+	}
+	
+	private void addMenu(){
+		JMenuBar menuBar = new JMenuBar();
+		JMenu menu = new JMenu("Menu");
+		menu.setMnemonic(KeyEvent.VK_A);
+		JMenuItem addCam = new AddCameraButton(this, m, camList, imagePanels);
+		menu.add(addCam);
+		menuBar.add(menu);
+		add(menuBar);
+	}
+	
+	private void addMovieCheckbox(){
+		movie = new JCheckBox("Force movie mode");
+		movie.setMnemonic(KeyEvent.VK_M);
+		movie.setSelected(false);
+		movie.addItemListener(this);
+	}
+	
+	private void addSyncCheckbox(){
+		synch = new JCheckBox("Synchronized mode");
+		synch.setMnemonic(KeyEvent.VK_S);
+		synch.setSelected(true);
+		synch.addItemListener(this);
+	}
 }

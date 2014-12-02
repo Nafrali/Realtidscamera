@@ -89,4 +89,9 @@ public class ClientMonitor {
 		return isMovie();
 	}
 
+	public synchronized int getCameraNbr() {
+
+		return lastImageNbr;
+	}
+
 }

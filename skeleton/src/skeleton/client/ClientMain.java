@@ -4,13 +4,15 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import GUI.GUI;
+
 public class ClientMain {
 
 	public static void main(String[] args) {
 		
 		ClientMonitor monitor = new ClientMonitor();
 
-		GUIt gui = new GUIt(monitor);
+		GUI gui = new GUI(monitor);
 		GuiThread guiThread = new GuiThread(monitor, gui);
 		guiThread.start();
 

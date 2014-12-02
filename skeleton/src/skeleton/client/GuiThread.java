@@ -13,7 +13,7 @@ public class GuiThread extends Thread {
 
 	public void run() {
 		while (true) {
-			gui.refreshImage(m.getLatestImage(), m.cameraInMovie());
+			gui.refreshImage(m.getLatestImage(), m.camerInMovie());
 		}
 	}
 

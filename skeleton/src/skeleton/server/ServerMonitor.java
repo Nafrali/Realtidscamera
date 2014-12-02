@@ -45,7 +45,7 @@ public class ServerMonitor {
 			try {
 				wait();
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+//				e.printStackTrace();
 			}
 		}
 		socketReadImage = true;

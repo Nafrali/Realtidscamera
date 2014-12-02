@@ -25,10 +25,5 @@ public class ClientMain {
 																			// på
 																			// 0
 		cs2.start();
-		// ServerListener2 sl = new ServerListener2(monitor, s);
-		// ServerWriter2 sw = new ServerWriter2(monitor, "localhost", 5555);
-
-		// sl.start();
-		// sw.start();
 	}
 }

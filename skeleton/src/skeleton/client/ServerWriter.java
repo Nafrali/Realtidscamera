@@ -9,8 +9,14 @@ public class ServerWriter extends Thread {
 	private ClientMonitor monitor;
 	private int[] cameraModes = new int[3];
 
+	private boolean cameraState;
+	private int cameraNbr;
+
 	public ServerWriter(ClientMonitor m, Socket socket) {
 		super();
+		// B�rjar i movie
+		cameraState = true;
+		this.cameraNbr = cameraNbr;
 		monitor = m;
 		this.s = socket;
 		try {
@@ -29,7 +35,20 @@ public class ServerWriter extends Thread {
 				os.write((byte) bit % 255);
 
 			} catch (Exception e) {
-				e.printStackTrace();
+
+				boolean tmp;
+				try {
+					tmp = monitor.initMovieMode();
+					if (cameraState != tmp) {
+						int bit = (tmp == true ? 1 : 0);
+						os.write((byte) bit % 255);
+						cameraState = tmp;
+					}
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
 			}
 
 		}

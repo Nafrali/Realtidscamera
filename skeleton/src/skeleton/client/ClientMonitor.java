@@ -29,7 +29,7 @@ public class ClientMonitor {
 
 	private boolean isMovie() {
 
-		return (cameraMovie[1] || cameraMovie[2] || GuiMovieMode);
+		return (cameraMovie[0] || cameraMovie[1] || GuiMovieMode);
 	}
 
 	public synchronized boolean initMovieMode() throws InterruptedException {

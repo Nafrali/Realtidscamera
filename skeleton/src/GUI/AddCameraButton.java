@@ -37,7 +37,7 @@ public class AddCameraButton extends JMenuItem implements ActionListener {
 		int port = 0;
 		try {
 			port = Integer.parseInt(stringPort);
-			System.out.println(address + " " + port);
+			gui.addToLog("Camera at " + address + " " + port);
 			ClientSocket tmp = new ClientSocket(m, address, port,
 					camList.size());
 			camList.add(tmp);

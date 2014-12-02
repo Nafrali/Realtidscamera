@@ -91,8 +91,7 @@ public class GUI extends JFrame implements ItemListener {
 			delays[0].setText("Camera 1: Movie mode active.");
 			delays[1].setText("Camera 2: Movie mode active.");
 			movie.setSelected(true);
-		}
-		 else if (!movieMode) {
+		} else if (!movieMode) {
 			delays[0].setText("Camera 1: Movie mode inactive.");
 			delays[1].setText("Camera 2: Movie mode inactive.");
 		}
@@ -104,12 +103,11 @@ public class GUI extends JFrame implements ItemListener {
 		Object source = e.getItemSelectable();
 
 		if (source == movie) {
-			if (e.getStateChange() == ItemEvent.SELECTED){
+			if (e.getStateChange() == ItemEvent.SELECTED) {
 				m.uppdateMovieMode(true);
-			delays[0].setText("Camera 1: Movie mode active.");
-			delays[1].setText("Camera 2: Movie mode active.");
-		}
-			else if (e.getStateChange() == ItemEvent.DESELECTED  )
+				delays[0].setText("Camera 1: Movie mode active.");
+				delays[1].setText("Camera 2: Movie mode active.");
+			} else if (e.getStateChange() == ItemEvent.DESELECTED)
 				m.uppdateMovieMode(false);
 			delays[0].setText("Camera 1: Movie mode inactive.");
 			delays[1].setText("Camera 2: Movie mode inactive.");
@@ -153,5 +151,10 @@ public class GUI extends JFrame implements ItemListener {
 		camDisplay.remove(camList.size() - 1);
 		camDisplay.add(newCam, camList.size() - 1);
 		pack();
+	}
+
+	public void addToLog(String string) {
+		actionLogArea.setText(string);
+
 	}
 }

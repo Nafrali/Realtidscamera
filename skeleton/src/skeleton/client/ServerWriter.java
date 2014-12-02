@@ -6,9 +6,9 @@ import java.net.Socket;
 public class ServerWriter extends Thread {
 	private Socket s;
 	private OutputStream os;
-	private ClientMonitor monitor; 
+	private ClientMonitor monitor;
 	private int[] cameraModes = new int[3];
-	
+
 	public ServerWriter(ClientMonitor m, Socket socket) {
 		super();
 		monitor = m;
@@ -21,23 +21,17 @@ public class ServerWriter extends Thread {
 		}
 	}
 
-	
 	public void run() {
 		while (!s.isClosed()) {
 			try {
 				boolean tmp = monitor.initMovieMode();
-				
-				
-				
 				int bit = (tmp == true ? 1 : 0);
 				os.write((byte) bit % 255);
-				
-				
-			} catch (InterruptedException e) {
-			} catch (IOException e) {
+
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
+
 		}
 	}
 }

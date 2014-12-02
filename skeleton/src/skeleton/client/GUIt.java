@@ -2,14 +2,21 @@ package skeleton.client;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
@@ -20,6 +27,9 @@ public class GUIt extends JFrame implements ItemListener {
 	ClientMonitor m;
 	ImagePanel imagePanelR;
 	ImagePanel imagePanelL;
+	ArrayList<ImagePanel> panelList = null;
+	ArrayList<JLabel> delayList = null;
+	ArrayList<ClientSocket> feedList = null;
 	JPanel displayPanel;
 	JCheckBox movie;
 	JCheckBox synch;
@@ -31,6 +41,10 @@ public class GUIt extends JFrame implements ItemListener {
 	public GUIt(ClientMonitor m) {
 		super();
 		this.m = m;
+
+		panelList = new ArrayList<ImagePanel>();
+		delayList = new ArrayList<JLabel>();
+		feedList = new ArrayList<ClientSocket>();
 
 		delays[0] = new JLabel("Camera 1");
 		delays[1] = new JLabel("Camera 2");
@@ -67,7 +81,6 @@ public class GUIt extends JFrame implements ItemListener {
 		getContentPane().add(camDisplay, BorderLayout.NORTH);
 		getContentPane().add(displayPanel, BorderLayout.SOUTH);
 
-		setLocationRelativeTo(null);
 		pack();
 
 	}
@@ -99,8 +112,11 @@ public class GUIt extends JFrame implements ItemListener {
 		if (movieMode) {
 			delays[0].setText("Camera 1: Movie mode active.");
 			delays[1].setText("Camera 2: Movie mode active.");
-		
 			movie.setSelected(true);
+		}
+		 else if (!movieMode) {
+			delays[0].setText("Camera 1: Movie mode inactive.");
+			delays[1].setText("Camera 2: Movie mode inactive.");
 		}
 		
 		if (firstCall) {

@@ -41,12 +41,12 @@ public class ServerSocketHandler extends Thread {
 				System.out.println("Waiting for client to connect");
 				socket = serverSocket.accept();
 				System.out.println("Client connected");
-
+				createBuilder();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			createBuilder();
+			
 			while (!socket.isClosed()) {
 				byte[] data = new byte[1];
 				try {

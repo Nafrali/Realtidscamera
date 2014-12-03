@@ -10,5 +10,6 @@ public class ClientMain {
 		GUI gui = new GUI(monitor);
 		GuiThread guiThread = new GuiThread(monitor, gui, 0);
 		guiThread.start();
+
 	}
 }

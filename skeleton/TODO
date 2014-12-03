@@ -13,7 +13,7 @@ Kolla om idle verkligen funkar.
 Sleep negativ ger crash (pga asynkront/inte?).
 
 
-Testa Oskars saker
+Testa Oskars saker (kanske inte funkar med forced idle mode)
 
 Refactor
 skriva dokumentation

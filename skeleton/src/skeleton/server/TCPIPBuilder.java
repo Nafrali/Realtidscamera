@@ -17,23 +17,13 @@ public class TCPIPBuilder extends Thread { // RENAME!!
 		try {
 			this.os = s.getOutputStream();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Fel i TCPIPBuilder");;
 		}
 		socket = s;
 		this.monitor = monitor;
 		serverSocket = monitor.getServerSocket();
-
-//		try {
-//			System.out.println("Writer waiting for client to connect...");
-//			socket = serverSocket.accept();
-//			System.out.println("Writer connection to client established.");
-//			os = socket.getOutputStream();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
 	}
+
 
 	public void run() {
 
@@ -41,9 +31,9 @@ public class TCPIPBuilder extends Thread { // RENAME!!
 			byte[] data = monitor.getImage();
 			try {
 				os.write(data); 
-				// System.out.println("Transmitting data.");
+				
 			} catch (IOException e) {
-//				System.out.println("Could not transmit.");
+				System.out.println("Could not transmit.");
 			}
 		}
 	}

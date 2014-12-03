@@ -50,14 +50,12 @@ public class ClientSocket extends Thread {
 				createWriter();
 				connected = true;
 			} catch (UnknownHostException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.out.println("UnknownHostException");
 			} catch (IOException e) {
 				try {
 					sleep(3000);
 				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					System.out.println("Något gick fel");
 				}
 			}
 		}

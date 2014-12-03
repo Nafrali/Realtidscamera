@@ -25,7 +25,6 @@ public class AddCameraButton extends JMenuItem implements ActionListener {
 		setText("Add camera");
 	}
 
-	@Override
 	public void actionPerformed(ActionEvent e) {
 
 		JFrame frame = new JFrame("Enter address of the new camera");

@@ -1,10 +1,14 @@
 package skeleton.client;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+
 public class ClientMonitor {
 	// private boolean movieMode;
 	private boolean systemMovie;
 	private byte[] currentPackage;
 	private byte[][] currentImage;
+	private ArrayList<LinkedList<ImageClass>> buffer;
 	private int lastImageNbr;
 	private boolean newPicture = false;
 	private boolean guiSynch = false;
@@ -14,6 +18,10 @@ public class ClientMonitor {
 
 	public ClientMonitor() {
 		currentImage = new byte[2][];
+		buffer = new ArrayList<LinkedList<ImageClass>>();
+		for(int i = 0; i < 2; i++){
+			buffer.add(new LinkedList<ImageClass>());
+		}
 		currentPackage = new byte[131084];
 
 	}
@@ -63,15 +71,17 @@ public class ClientMonitor {
 
 		// TODO 2 kameror
 
-		currentImage[cameraNbr] = image;
-		lastImageNbr = cameraNbr;
-		newPicture = true;
+//		currentImage[cameraNbr] = image;
+//		lastImageNbr = cameraNbr;
+//		newPicture = true;
+		buffer.get(cameraNbr).add(new ImageClass(image));
 		notifyAll();
 
 	}
 
-	public synchronized byte[] getLatestImage() {
-		while (!newPicture) {
+	public synchronized ImageClass getLatestImage() {
+		//Just nu kan den bara hämta till kamera 0
+		while (buffer.get(0).isEmpty()) {
 			try {
 				wait();
 			} catch (InterruptedException e) {
@@ -79,8 +89,18 @@ public class ClientMonitor {
 				e.printStackTrace();
 			}
 		}
-		newPicture = false;
-		return currentImage[lastImageNbr];
+		System.out.println(buffer.get(0).size());
+		return buffer.get(0).pop();
+		
+//		while (!newPicture) {
+//			try {
+//				wait();
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
+//		return currentImage[lastImageNbr];
 	}
 
 	public synchronized void uppdateMovieMode(boolean movie) {

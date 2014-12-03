@@ -71,6 +71,7 @@ public class ClientMonitor {
 	}
 
 	public synchronized byte[] getLatestImage() {
+
 		while (!newPicture) {
 			try {
 				wait();

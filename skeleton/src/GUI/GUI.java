@@ -32,7 +32,7 @@ public class GUI extends JFrame implements ItemListener {
 	ArrayList<ImagePanel> imagePanels;
 	JPanel displayPanel;
 	JCheckBox movie;
-	BufferedImage nocamfeed;
+	BufferedImage nocamfeed, waitingforconnect;
 	JCheckBox synch;
 	JPanel camDisplay;
 	JLabel[] delays = new JLabel[4];
@@ -66,6 +66,8 @@ public class GUI extends JFrame implements ItemListener {
 		displayPanel.add(checkBoxPanel);
 		try {
 			nocamfeed = ImageIO.read(new File("../files/nocamfeed.jpg"));
+			waitingforconnect = ImageIO
+					.read(new File("../files/waitforcon.jpg"));
 			for (int i = 0; i < 4; i++)
 				camDisplay.add(new JLabel(new ImageIcon(nocamfeed)));
 		} catch (IOException ex) {
@@ -85,20 +87,18 @@ public class GUI extends JFrame implements ItemListener {
 
 	public void refreshImage(byte[] newPicture, boolean movieMode, int imgNbr) {
 		jpeg = newPicture;
-		if (imagePanels.size() == 0) {
-			return;
-		}
 		try {
 			imagePanels.get(imgNbr).refresh(jpeg);
-		} catch (IndexOutOfBoundsException e) {
-//			addToLog("Could not refresh image: " + imgNbr + ".");
+		} catch (Exception e) {
+			addToLog("Could not refresh image: " + imgNbr
+					+ ". Camera not connected.");
 		}
 		if (movieMode) {
-			delays[0].setText("Camera 1: Movie mode active.");
-			delays[1].setText("Camera 2: Movie mode active.");
+			delays[0].setText("Camera 1: Movie mode.");
+			delays[1].setText("Camera 2: Movie mode.");
 		} else if (!movieMode) {
-			delays[0].setText("Camera 1: Movie mode inactive.");
-			delays[1].setText("Camera 2: Movie mode inactive.");
+			delays[0].setText("Camera 1: Idle mode.");
+			delays[1].setText("Camera 2: Idle mode.");
 		}
 	}
 
@@ -157,16 +157,21 @@ public class GUI extends JFrame implements ItemListener {
 		imagePanels.add(newCam);
 		camDisplay.remove(camList.size() - 1);
 		camDisplay.add(newCam, camList.size() - 1);
-		pack();
 	}
 
 	public void addToLog(String string) {
-		actionLogArea.setText(string);
+		actionLogArea.append(string);
 
 	}
 
 	public void removeCamera(int camNbr) {
 		camDisplay.remove(camNbr - 1);
 		camDisplay.add(new JLabel(new ImageIcon(nocamfeed)), camNbr - 1);
+	}
+
+	public void setWaitImage(int camNbr) {
+		camDisplay.remove(camNbr);
+		camDisplay.add(new JLabel(new ImageIcon(waitingforconnect)), camNbr);
+
 	}
 }

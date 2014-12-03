@@ -15,7 +15,8 @@ public class GuiThread extends Thread {
 
 	public void run() {
 		while (true) {
-			gui.refreshImage(m.getLatestImage(), m.cameraInMovie(), m.getCameraNbr());
+			gui.refreshImage(m.getLatestImage(), m.cameraInMovie(),
+					m.getCameraNbr());
 		}
 	}
 

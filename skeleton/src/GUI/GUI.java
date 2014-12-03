@@ -146,6 +146,5 @@ public class GUI extends JFrame implements ItemListener {
 	public void setWaitImage(int camNbr) {
 		camDisplay.remove(camNbr);
 		camDisplay.add(new JLabel(new ImageIcon(waitingforconnect)), camNbr);
-
 	}
 }

@@ -1,7 +1,14 @@
 package skeleton.client;
 
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
+import java.awt.image.WritableRaster;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
+
+import javax.imageio.ImageIO;
 
 public class ClientMonitor {
 
@@ -25,7 +32,6 @@ public class ClientMonitor {
 		for (int i = 0; i < 2; i++) {
 			buffer.add(new LinkedList<ImageClass>());
 		}
-
 		currentPackage = new byte[131084];
 
 	}
@@ -82,7 +88,7 @@ public class ClientMonitor {
 			try {
 				wait();
 			} catch (InterruptedException e) {
-				System.out.println(("Något gick fel i getLatestImage"));
+				System.out.println(("getLatestImage failure"));
 			}
 		}
 		// return imageClassArray[cameraID];
@@ -121,5 +127,20 @@ public class ClientMonitor {
 
 	public synchronized boolean getMode() {
 		return systemMovie;
+	}
+
+	public synchronized byte[] extractBytes() {
+		BufferedImage bufferedImage;
+		DataBufferByte data = new DataBufferByte(0);
+		try {
+			bufferedImage = ImageIO.read(new File("../files/waitforcon.jpg"));
+			WritableRaster raster = bufferedImage.getRaster();
+			data = (DataBufferByte) raster.getDataBuffer();
+
+		} catch (IOException e) {
+			System.out.println("Wait for connection image not found.");
+			e.printStackTrace();
+		}
+		return (data.getData());
 	}
 }

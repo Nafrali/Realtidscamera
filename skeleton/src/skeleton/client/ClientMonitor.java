@@ -71,28 +71,17 @@ public class ClientMonitor {
 
 		// TODO 2 kameror
 
-//		currentImage[cameraNbr] = image;
-//		lastImageNbr = cameraNbr;
-//		newPicture = true;
-		buffer.get(cameraNbr).add(new ImageClass(image));
+		currentImage[cameraNbr] = image;
+		lastImageNbr = cameraNbr;
+		newPicture = true;
+//		buffer.get(cameraNbr).add(new ImageClass(image));
 		notifyAll();
 
 	}
 
-	public synchronized ImageClass getLatestImage() {
+	public synchronized byte[] getLatestImage() {
 		//Just nu kan den bara hämta till kamera 0
-		while (buffer.get(0).isEmpty()) {
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		System.out.println(buffer.get(0).size());
-		return buffer.get(0).pop();
-		
-//		while (!newPicture) {
+//		while (buffer.get(0).isEmpty()) {
 //			try {
 //				wait();
 //			} catch (InterruptedException e) {
@@ -100,7 +89,18 @@ public class ClientMonitor {
 //				e.printStackTrace();
 //			}
 //		}
-//		return currentImage[lastImageNbr];
+//		System.out.println(buffer.get(0).size());
+//		return buffer.get(0).pop();
+		
+		while (!newPicture) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return currentImage[lastImageNbr];
 	}
 
 	public synchronized void uppdateMovieMode(boolean movie) {

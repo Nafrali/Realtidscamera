@@ -15,7 +15,7 @@ public class ClientSocket extends Thread {
 	private ServerWriter sw;
 	private int cameraNbr;
 
-	public ClientSocket(ClientMonitor m, String address, int port, int cameraNbr) {
+	public ClientSocket(ClientMonitor m, String address, int port, int cameraNbr) throws Exception {
 		super();
 		this.cameraNbr = cameraNbr;
 		this.monitor = m;
@@ -39,27 +39,27 @@ public class ClientSocket extends Thread {
 		}
 	}
 
-	private void connect() {
+	private void connect() throws UnknownHostException, IOException {
 		boolean connected = false;
 		while (!connected) {
-			try {
+//			try {
 				s = new Socket(address, port);
 				is = s.getInputStream();
 				System.out.println("Connected to server: " + address
 						+ " at port: " + port);
 				createWriter();
 				connected = true;
-			} catch (UnknownHostException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				try {
-					sleep(3000);
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
+//			} catch (UnknownHostException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			} catch (IOException e) {
+//				try {
+//					sleep(3000);
+//				} catch (InterruptedException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				}
+//			}
 		}
 	}
 

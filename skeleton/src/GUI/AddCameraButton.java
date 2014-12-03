@@ -12,9 +12,9 @@ import skeleton.client.ClientSocket;
 
 public class AddCameraButton extends JMenuItem implements ActionListener {
 
-	ClientMonitor m;
-	ArrayList<ClientSocket> camList;
-	GUI gui;
+	private ClientMonitor m;
+	private ArrayList<ClientSocket> camList;
+	private GUI gui;
 
 	public AddCameraButton(GUI gui, ClientMonitor m,
 			ArrayList<ClientSocket> camList) {
@@ -25,25 +25,29 @@ public class AddCameraButton extends JMenuItem implements ActionListener {
 		setText("Add camera");
 	}
 
-	@Override
 	public void actionPerformed(ActionEvent e) {
+		if (camList.size() >= gui.MAXCAMERAS) {
+			gui.addToLog("Maximum amount of cameras (" + gui.MAXCAMERAS
+					+ ") already added.");
 
-		JFrame frame = new JFrame("Enter address of the new camera");
-		String address = JOptionPane.showInputDialog(frame, "New camera ip:");
-		String stringPort = JOptionPane.showInputDialog(frame,
-				"New camera port:");
-		int port = 0;
-		try {
-			port = Integer.parseInt(stringPort);
-			gui.addToLog("Connected to camera @" + address + ":" + port);
-			ClientSocket tmp = new ClientSocket(m, address, port,
-					camList.size());
-			camList.add(tmp);
-			tmp.start();
-			gui.addCamera();
+		} else {
+			JFrame frame = new JFrame("Enter address of the new camera");
+			String address = JOptionPane.showInputDialog(frame,
+					"New camera ip:");
+			String stringPort = JOptionPane.showInputDialog(frame,
+					"New camera port:");
+			int port = 0;
+			try {
+				port = Integer.parseInt(stringPort);
+				gui.addToLog("Connected to camera @" + address + ":" + port);
+				ClientSocket tmp = new ClientSocket(m, address, port,
+						camList.size());
+				camList.add(tmp);
+				tmp.start();
+				gui.addCamera();
 
-		} catch (Exception e1) {
+			} catch (Exception e1) {
+			}
 		}
-
 	}
 }

@@ -25,7 +25,6 @@ public class RemoveCameraButton extends JMenuItem implements ActionListener {
 
 	}
 
-	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		JFrame frame = new JFrame("Enter id-number of camera to be removed.");
 		String id = JOptionPane.showInputDialog(frame, "Camera to be removed:");

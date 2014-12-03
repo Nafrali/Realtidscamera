@@ -25,8 +25,7 @@ public class ServerSocketHandler extends Thread {
 		try {
 			builder.join();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Fel i serverSocketHandler");
 		}
 	}
 
@@ -43,8 +42,7 @@ public class ServerSocketHandler extends Thread {
 				System.out.println("Client connected");
 				createBuilder();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.out.println("Fel i serverSocketHandler");
 			}
 			
 			while (!socket.isClosed()) {
@@ -66,12 +64,10 @@ public class ServerSocketHandler extends Thread {
 						if (socket.isClosed())
 						destroyBuilder();
 					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						System.out.println("Fel i serverSocketHandler");
 					}
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					System.out.println("Fel i serverSocketHandler");
 				}
 			}
 		}

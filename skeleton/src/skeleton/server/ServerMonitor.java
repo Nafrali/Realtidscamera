@@ -41,15 +41,14 @@ public class ServerMonitor {
 
 	public synchronized byte[] getImage() {
 
-		while ((!movieMode || imgNbr != 0) && socketReadImage) {
+		while (!(!socketReadImage && ((movieMode) || (!movieMode && imgNbr == 0)))) {
 			try {
 				wait();
 			} catch (InterruptedException e) {
-				System.out.println("Fel i ServerMonitor");
+				System.out.println("ServerMonitor error");
 			}
 		}
 		socketReadImage = true;
-
 		return image;
 	}
 

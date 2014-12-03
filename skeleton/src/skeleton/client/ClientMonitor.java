@@ -82,11 +82,8 @@ public class ClientMonitor {
 		for (int i = 0; i < timestamp.length; i++) {
 			timestampLong = (timestampLong << 8) + (timestamp[i] & 0xff);
 		}
-		if (firstPic) {
-			firstPic = false;
-			offset = currentTime - timestampLong;
-		}
-		return (currentTime - offset) - timestampLong;
+		
+		return currentTime - timestampLong;
 	}
 	
 

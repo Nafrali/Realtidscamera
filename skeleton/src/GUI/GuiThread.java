@@ -20,8 +20,6 @@ public class GuiThread extends Thread {
 			currentImage = m.getLatestImage();
 			gui.refreshImage(currentImage.getImage(), m.cameraInMovie(),
 					m.getCameraNbr(), currentImage.getTravelTime());
-			// gui.refreshImage(m.getLatestImage(), m.cameraInMovie(),
-			// m.getCameraNbr());
 		}
 	}
 

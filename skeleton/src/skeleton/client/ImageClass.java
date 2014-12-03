@@ -6,6 +6,7 @@ public class ImageClass {
 	
 	public ImageClass(byte[] image, long travelTime){
 		this.image=image;
+		this.travelTime = travelTime;
 	}
 	
 	public byte[] getImage(){

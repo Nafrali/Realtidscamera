@@ -9,11 +9,9 @@ class ImagePanel extends JPanel {
 	private JLabel picture;
 	private JLabel text;
 	private int camNbr;
-	private boolean moviemode;
 
-	public ImagePanel(int camNbr, boolean moviemode) {
+	public ImagePanel(int camNbr) {
 		super();
-		this.moviemode = moviemode;
 		this.camNbr = camNbr;
 		picture = new JLabel(new ImageIcon());
 		text = new JLabel("Camera " + (camNbr + 1) + ". Network travel time: 0ms");

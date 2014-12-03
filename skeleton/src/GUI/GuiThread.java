@@ -21,6 +21,13 @@ public class GuiThread extends Thread {
 	public void run() {
 		while (true) {
 			currentImage = m.getLatestImage(threadID);
+			try {
+				System.out.println(currentImage.getShowTime() - System.currentTimeMillis());
+				sleep(currentImage.getShowTime() - System.currentTimeMillis());
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			gui.refreshImage(currentImage.getImage(), m.cameraInMovie(),
 					threadID, currentImage.getTravelTime());
 		}

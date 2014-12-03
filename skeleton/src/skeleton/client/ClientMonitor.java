@@ -12,14 +12,15 @@ public class ClientMonitor {
 	private boolean guiSynch = false;
 	private boolean newMovieSetting = false;
 	private ImageClass[] imageClassArray;
+	private final static long DELAY_MODIFIER = 300;
 
-	private boolean GuiMovieMode =false;
+	private boolean GuiMovieMode = false;
 
 	public ClientMonitor() {
 		currentImage = new byte[4][];
 		imageClassArray = new ImageClass[2];
 		buffer = new ArrayList<LinkedList<ImageClass>>();
-		for(int i = 0; i < 2; i++){
+		for (int i = 0; i < 2; i++) {
 			buffer.add(new LinkedList<ImageClass>());
 		}
 
@@ -49,39 +50,42 @@ public class ClientMonitor {
 	private void handlePackage(int cameraNbr) {
 		byte[] motion = new byte[1];
 		byte[] timestamp = new byte[8];
-		if(currentPackage.length - 9 < 0)
+		if (currentPackage.length - 9 < 0)
 			return;
 		byte[] image = new byte[currentPackage.length - 9];
 		System.arraycopy(currentPackage, 0, motion, 0, 1);
 		System.arraycopy(currentPackage, 1, timestamp, 0, 8);
 		System.arraycopy(currentPackage, 9, image, 0, currentPackage.length - 9);
 
-		if(motion[0]==1){
-		changeMotion(true);
+		if (motion[0] == 1) {
+			changeMotion(true);
 		}
 
+		long travelTime = networkTravelTime(timestamp);
+		long showTime = System.currentTimeMillis()
+				+ (DELAY_MODIFIER - travelTime);
 
-		buffer.get(cameraNbr).add(new ImageClass(image, networkTravelTime(timestamp)));
-//		imageClassArray[cameraNbr] = new ImageClass(image, networkTravelTime(timestamp));
+		buffer.get(cameraNbr).add(new ImageClass(image, travelTime, showTime));
+		// imageClassArray[cameraNbr] = new ImageClass(image,
+		// networkTravelTime(timestamp));
 		newPicture = true;
 		notifyAll();
 
 	}
+
 	private long networkTravelTime(byte[] timestamp) {
 		long timestampLong = 0;
 		long currentTime = System.currentTimeMillis();
 		for (int i = 0; i < timestamp.length; i++) {
 			timestampLong = (timestampLong << 8) + (timestamp[i] & 0xff);
 		}
-		
+
 		return currentTime - timestampLong;
 	}
-	
-
 
 	public synchronized ImageClass getLatestImage(int cameraID) {
-		//Just nu kan den bara hämta till kamera 0
-		
+		// Just nu kan den bara hämta till kamera 0
+
 		while (buffer.get(cameraID).isEmpty()) {
 			try {
 				wait();
@@ -89,22 +93,20 @@ public class ClientMonitor {
 				System.out.println(("Något gick fel i getLatestImage"));
 			}
 		}
-//		return imageClassArray[cameraID];
+		// return imageClassArray[cameraID];
+		System.out.println(buffer.get(cameraID).size());
 		return buffer.get(cameraID).pop();
-		
-		
-		
-		
-//		Har att göra med buffert! Ta ej bort! // Munkenyo
-//		while (!newPicture) {
-//			try {
-//				wait();
-//			} catch (InterruptedException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		}
-//		return currentImage[lastImageNbr];
+
+		// Har att göra med buffert! Ta ej bort! // Munkenyo
+		// while (!newPicture) {
+		// try {
+		// wait();
+		// } catch (InterruptedException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		// }
+		// return currentImage[lastImageNbr];
 	}
 
 	public synchronized void uppdateMovieMode(boolean movie) {

@@ -1,25 +1,21 @@
 TODOs
 
 
-1.  9. Implementera bufferten
-
-2.	Under varje bild ska det stå vilken delay från att bilden tagits till att den visas upp.
-
-3.	11. In the client application, the user should be informed
-	clearly about which mode is active and what camera server triggered the
+3.	11. and what camera server triggered the
 	latest movie mode
-
-4.	3.
-	By default the system starts up in mode Idle for all cameras. When
-	Movie is detected for one camera, all other cameras should also enter
-	mode Movie. This mode remains until the operator decides to enter 
-	mode Idle again
 
 5.	15.
 	It should be possible via the client (either as part of the GUI or as debug
-	options) to enforce synchronous mode as well as asynchronous mode. In
-	a similar manner, as when selecting Idle according to item 13, it should
-	be possible to enforce both Idle and Movie mode. For normal operation,
-	there should be a choice Auto  //WAT?
+	options) to enforce synchronous mode as well as asynchronous mode. 
+	
+Kolla om idle verkligen funkar.
 
-6. JPGHTTPCLIENT??
+Sleep negativ ger crash (pga asynkront/inte?).
+
+
+Testa Oskars saker
+
+Refactor
+skriva dokumentation
+Ta bort package och liknande (Finns på d-sek hemsida hur man gör)
+

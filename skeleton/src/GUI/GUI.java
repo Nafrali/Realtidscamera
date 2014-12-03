@@ -27,18 +27,17 @@ import skeleton.client.ClientSocket;
 
 public class GUI extends JFrame implements ItemListener {
 
-	ClientMonitor m;
-	ArrayList<ClientSocket> camList;
-	ArrayList<ImagePanel> imagePanels;
-	JPanel displayPanel;
-	JCheckBox movie;
-	BufferedImage nocamfeed;
-	JCheckBox synch;
-	JPanel camDisplay;
-	JLabel[] delays = new JLabel[4];
-	JTextArea actionLogArea = new JTextArea();
-	boolean firstCall = true;
-	byte[] jpeg = new byte[AxisM3006V.IMAGE_BUFFER_SIZE];
+	private ClientMonitor m;
+	private ArrayList<ClientSocket> camList;
+	private ArrayList<ImagePanel> imagePanels;
+	private JPanel displayPanel;
+	private BufferedImage nocamfeed, waitingforconnect;
+	private JCheckBox synch;
+	private JPanel camDisplay;
+	private JLabel systemMode;
+	private JTextArea actionLogArea = new JTextArea();
+	private byte[] jpeg = new byte[AxisM3006V.IMAGE_BUFFER_SIZE];
+	public static final int MAXCAMERAS = 2;
 
 	public GUI(ClientMonitor m) {
 		super();
@@ -47,27 +46,27 @@ public class GUI extends JFrame implements ItemListener {
 		getContentPane().setLayout(new BorderLayout());
 		camList = new ArrayList<ClientSocket>();
 		imagePanels = new ArrayList<ImagePanel>();
-		delays[0] = new JLabel("Camera 1");
-		delays[1] = new JLabel("Camera 2");
-		addMovieCheckbox();
 		addSyncCheckbox();
 		addMenu();
 		camDisplay = new JPanel();
-		camDisplay.setLayout(new GridLayout(2, 2));
+		camDisplay.setLayout(new GridLayout(0, 2));
 
+		systemMode = new JLabel("System in idle mode.");
 		displayPanel = new JPanel();
-		JPanel checkBoxPanel = new JPanel();
+		JPanel modeSelectionPanel = new JPanel();
 		displayPanel.setLayout(new GridLayout(0, 2));
-		checkBoxPanel.setLayout(new BorderLayout());
-		checkBoxPanel.add(movie, BorderLayout.WEST);
-		checkBoxPanel.add(synch, BorderLayout.EAST);
-		displayPanel.add(delays[0]);
-		displayPanel.add(delays[1]);
+		modeSelectionPanel.setLayout(new BorderLayout());
+		modeSelectionPanel.add(new CameraModeRadioButtonPane(this, m),
+				BorderLayout.WEST);
+		modeSelectionPanel.add(synch, BorderLayout.EAST);
+		modeSelectionPanel.add(systemMode, BorderLayout.CENTER);
 		displayPanel.add(actionLogArea);
-		displayPanel.add(checkBoxPanel);
+		displayPanel.add(modeSelectionPanel);
 		try {
 			nocamfeed = ImageIO.read(new File("../files/nocamfeed.jpg"));
-			for (int i = 0; i < 4; i++)
+			waitingforconnect = ImageIO
+					.read(new File("../files/waitforcon.jpg"));
+			for (int i = 0; i < 2; i++)
 				camDisplay.add(new JLabel(new ImageIcon(nocamfeed)));
 		} catch (IOException ex) {
 			System.out.println("\"No camera feed\" image not found.");
@@ -82,22 +81,18 @@ public class GUI extends JFrame implements ItemListener {
 
 	}
 
-	public void refreshImage(byte[] newPicture, boolean movieMode, int imgNbr) {
+	public void refreshImage(byte[] newPicture, boolean movieMode, int imgNbr,
+			long traveltime) {
 		jpeg = newPicture;
-		if (imagePanels.size() == 0) {
-			return;
-		}
 		try {
-			imagePanels.get(imgNbr).refresh(jpeg);
-		} catch (IndexOutOfBoundsException e) {
-//			addToLog("Could not refresh image: " + imgNbr + ".");
-		}
-		if (movieMode) {
-			delays[0].setText("Camera 1: Movie mode active.");
-			delays[1].setText("Camera 2: Movie mode active.");
-		} else if (!movieMode) {
-			delays[0].setText("Camera 1: Movie mode inactive.");
-			delays[1].setText("Camera 2: Movie mode inactive.");
+			imagePanels.get(imgNbr).refresh(jpeg, traveltime);
+			if (movieMode)
+				systemMode.setText("System in movie mode");
+			else
+				systemMode.setText("System in idle mode");
+		} catch (Exception e) {
+			addToLog("Could not refresh image: " + imgNbr
+					+ ". Camera not connected.");
 		}
 	}
 
@@ -105,22 +100,10 @@ public class GUI extends JFrame implements ItemListener {
 
 		Object source = e.getItemSelectable();
 
-		if (source == movie) {
-			if (e.getStateChange() == ItemEvent.SELECTED) {
-				m.uppdateMovieMode(true);
-				delays[0].setText("Camera 1: Movie mode active.");
-				delays[1].setText("Camera 2: Movie mode active.");
-			} else if (e.getStateChange() == ItemEvent.DESELECTED)
-				m.uppdateMovieMode(false);
-			delays[0].setText("Camera 1: Movie mode inactive.");
-			delays[1].setText("Camera 2: Movie mode inactive.");
-
-		} else if (source == synch) {
-			if (e.getStateChange() == ItemEvent.SELECTED)
-				m.uppdateSynchMode(true);
-			else if (e.getStateChange() == ItemEvent.DESELECTED)
-				m.uppdateSynchMode(false);
-		}
+		if (e.getStateChange() == ItemEvent.SELECTED)
+			m.uppdateSynchMode(true);
+		else if (e.getStateChange() == ItemEvent.DESELECTED)
+			m.uppdateSynchMode(false);
 
 	}
 
@@ -136,13 +119,6 @@ public class GUI extends JFrame implements ItemListener {
 		add(menuBar, BorderLayout.NORTH);
 	}
 
-	private void addMovieCheckbox() {
-		movie = new JCheckBox("Force movie mode");
-		movie.setMnemonic(KeyEvent.VK_M);
-		movie.setSelected(false);
-		movie.addItemListener(this);
-	}
-
 	private void addSyncCheckbox() {
 		synch = new JCheckBox("Synchronized mode");
 		synch.setMnemonic(KeyEvent.VK_S);
@@ -151,20 +127,25 @@ public class GUI extends JFrame implements ItemListener {
 	}
 
 	public void addCamera() {
-		ImagePanel newCam = new ImagePanel();
+		ImagePanel newCam = new ImagePanel(camList.size() - 1);
 		imagePanels.add(newCam);
 		camDisplay.remove(camList.size() - 1);
 		camDisplay.add(newCam, camList.size() - 1);
-		pack();
 	}
 
 	public void addToLog(String string) {
-		actionLogArea.setText(string);
+		actionLogArea.append(string);
 
 	}
 
 	public void removeCamera(int camNbr) {
 		camDisplay.remove(camNbr - 1);
 		camDisplay.add(new JLabel(new ImageIcon(nocamfeed)), camNbr - 1);
+	}
+
+	public void setWaitImage(int camNbr) {
+		camDisplay.remove(camNbr);
+		camDisplay.add(new JLabel(new ImageIcon(waitingforconnect)), camNbr);
+
 	}
 }

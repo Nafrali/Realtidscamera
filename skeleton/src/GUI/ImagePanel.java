@@ -6,21 +6,24 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 class ImagePanel extends JPanel {
-	ImageIcon icon;
-	JLabel label;
+	private JLabel picture;
+	private JLabel text;
+	private int camNbr;
 
-	public ImagePanel() {
+	public ImagePanel(int camNbr) {
 		super();
-		icon = new ImageIcon();
-		label = new JLabel(icon);
-
-		add(label, BorderLayout.CENTER);
+		this.camNbr = camNbr;
+		picture = new JLabel(new ImageIcon());
+		text = new JLabel("Camera " + (camNbr + 1) + ". Network travel time: 0ms");
+		add(text, BorderLayout.SOUTH);
+		add(picture, BorderLayout.CENTER);
 		this.setSize(200, 200);
 	}
 
-	public void refresh(byte[] data) {
-
-		label.setIcon(new ImageIcon(data));
+	public void refresh(byte[] data, long nettraveltime) {
+		text.setText("Camera " + (camNbr + 1) + ". Network travel time: "
+				+ nettraveltime + "ms");
+		picture.setIcon(new ImageIcon(data));
 
 	}
 }

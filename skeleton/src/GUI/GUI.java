@@ -34,7 +34,7 @@ public class GUI extends JFrame implements ItemListener {
 	private BufferedImage nocamfeed, waitingforconnect;
 	private JCheckBox synch;
 	private JPanel camDisplay;
-	private JLabel[] delays = new JLabel[4];
+	private JLabel systemMode;
 	private JTextArea actionLogArea = new JTextArea();
 	private byte[] jpeg = new byte[AxisM3006V.IMAGE_BUFFER_SIZE];
 	public static final int MAXCAMERAS = 2;
@@ -45,21 +45,20 @@ public class GUI extends JFrame implements ItemListener {
 		getContentPane().setLayout(new BorderLayout());
 		camList = new ArrayList<ClientSocket>();
 		imagePanels = new ArrayList<ImagePanel>();
-		delays[0] = new JLabel("Camera 1");
-		delays[1] = new JLabel("Camera 2");
 		addSyncCheckbox();
 		addMenu();
 		camDisplay = new JPanel();
 		camDisplay.setLayout(new GridLayout(0, 2));
 
+		systemMode = new JLabel("System in idle mode.");
 		displayPanel = new JPanel();
 		JPanel modeSelectionPanel = new JPanel();
 		displayPanel.setLayout(new GridLayout(0, 2));
 		modeSelectionPanel.setLayout(new BorderLayout());
-		modeSelectionPanel.add(new CameraModeRadioButtonPane(this, m), BorderLayout.WEST);
+		modeSelectionPanel.add(new CameraModeRadioButtonPane(this, m),
+				BorderLayout.WEST);
 		modeSelectionPanel.add(synch, BorderLayout.EAST);
-		displayPanel.add(delays[0]);
-		displayPanel.add(delays[1]);
+		modeSelectionPanel.add(systemMode, BorderLayout.CENTER);
 		displayPanel.add(actionLogArea);
 		displayPanel.add(modeSelectionPanel);
 		try {
@@ -86,16 +85,13 @@ public class GUI extends JFrame implements ItemListener {
 		jpeg = newPicture;
 		try {
 			imagePanels.get(imgNbr).refresh(jpeg, traveltime);
+			if (movieMode)
+				systemMode.setText("System in movie mode");
+			else
+				systemMode.setText("System in idle mode");
 		} catch (Exception e) {
 			addToLog("Could not refresh image: " + imgNbr
 					+ ". Camera not connected.");
-		}
-		if (movieMode) {
-			delays[0].setText("Camera 1: Movie mode.");
-			delays[1].setText("Camera 2: Movie mode.");
-		} else if (!movieMode) {
-			delays[0].setText("Camera 1: Idle mode.");
-			delays[1].setText("Camera 2: Idle mode.");
 		}
 	}
 

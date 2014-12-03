@@ -8,12 +8,9 @@ public class ClientMonitor {
 	private byte[] currentPackage;
 	private byte[][] currentImage;
 	private ArrayList<LinkedList<ImageClass>> buffer;
-	private int lastImageNbr;
 	private boolean newPicture = false;
 	private boolean guiSynch = false;
 	private boolean newMovieSetting = false;
-	private long offset = 0;
-	private boolean firstPic = true;
 	private ImageClass[] imageClassArray;
 
 	private boolean GuiMovieMode =false;
@@ -28,10 +25,6 @@ public class ClientMonitor {
 
 		currentPackage = new byte[131084];
 
-	}
-	
-	public synchronized int getCameraNbr() {
-		return lastImageNbr;
 	}
 
 	private void changeMotion(boolean newMode) {
@@ -68,10 +61,8 @@ public class ClientMonitor {
 		}
 
 
-//		currentImage[cameraNbr] = image;
-//		buffer.get(cameraNbr).add(new ImageClass(image, networkTravelTime(timestamp)));
-		imageClassArray[cameraNbr] = new ImageClass(image, networkTravelTime(timestamp));
-		lastImageNbr = cameraNbr;
+		buffer.get(cameraNbr).add(new ImageClass(image, networkTravelTime(timestamp)));
+//		imageClassArray[cameraNbr] = new ImageClass(image, networkTravelTime(timestamp));
 		newPicture = true;
 		notifyAll();
 
@@ -91,14 +82,19 @@ public class ClientMonitor {
 	public synchronized ImageClass getLatestImage(int cameraID) {
 		//Just nu kan den bara hämta till kamera 0
 		
-		while (!newPicture) {
+		while (buffer.get(cameraID).isEmpty()) {
 			try {
 				wait();
 			} catch (InterruptedException e) {
 				System.out.println(("Något gick fel i getLatestImage"));
 			}
 		}
-		return imageClassArray[cameraID];
+//		return imageClassArray[cameraID];
+		return buffer.get(cameraID).pop();
+		
+		
+		
+		
 //		Har att göra med buffert! Ta ej bort! // Munkenyo
 //		while (!newPicture) {
 //			try {

@@ -42,6 +42,7 @@ public class GUI extends JFrame implements ItemListener {
 	public GUI(ClientMonitor m) {
 		super();
 		this.m = m;
+		actionLogArea.setEditable(false);
 		getContentPane().setLayout(new BorderLayout());
 		camList = new ArrayList<ClientSocket>();
 		imagePanels = new ArrayList<ImagePanel>();

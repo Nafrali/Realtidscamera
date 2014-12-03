@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import javax.imageio.ImageIO;
 
 public class ClientMonitor {
+
 	private boolean systemMovie = false;
 	public static final int MOVIE = 1, IDLE = 2, AUTO = 3;
 	private byte[] currentPackage;
@@ -55,6 +56,7 @@ public class ClientMonitor {
 		System.arraycopy(currentPackage, 0, motion, 0, 1);
 		System.arraycopy(currentPackage, 1, timestamp, 0, 8);
 		System.arraycopy(currentPackage, 9, image, 0, currentPackage.length - 9);
+
 
 		if (motion[0] == 1 && mode != 2) {
 			systemMovie = true;

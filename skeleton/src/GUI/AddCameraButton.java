@@ -46,9 +46,9 @@ public class AddCameraButton extends JMenuItem implements ActionListener {
 						camList.size());
 				camList.add(tmp);
 				tmp.start();
-				gui.addCamera();
-				threadList.add(new GuiThread(m, gui, camList.size()-1));
-				threadList.get(camList.size()-1).start();
+				gui.setWaitImage(camList.size() - 1);
+				threadList.add(new GuiThread(m, gui, camList.size() - 1));
+				threadList.get(camList.size() - 1).start();
 
 			} catch (Exception e1) {
 			}

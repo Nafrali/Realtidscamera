@@ -71,8 +71,6 @@ public class GUI extends JFrame implements ItemListener {
 		} catch (IOException ex) {
 			System.out.println("\"No camera feed\" image not found.");
 		}
-		// camDisplay.add(imagePanelL);
-		// camDisplay.add(imagePanelR);
 		getContentPane().add(camDisplay, BorderLayout.CENTER);
 		getContentPane().add(displayPanel, BorderLayout.SOUTH);
 
@@ -102,7 +100,6 @@ public class GUI extends JFrame implements ItemListener {
 		}
 	}
 
-	@Override
 	public void itemStateChanged(ItemEvent e) {
 
 		Object source = e.getItemSelectable();

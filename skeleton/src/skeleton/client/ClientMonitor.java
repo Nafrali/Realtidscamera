@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class ClientMonitor {
-	// private boolean movieMode;
 	private boolean systemMovie;
 	private byte[] currentPackage;
 	private byte[][] currentImage;
@@ -20,12 +19,13 @@ public class ClientMonitor {
 	private boolean GuiMovieMode =false;
 
 	public ClientMonitor() {
-		currentImage = new byte[2][];
+		currentImage = new byte[4][];
 		imageClassArray = new ImageClass[2];
 		buffer = new ArrayList<LinkedList<ImageClass>>();
 		for(int i = 0; i < 2; i++){
 			buffer.add(new LinkedList<ImageClass>());
 		}
+
 		currentPackage = new byte[131084];
 
 	}
@@ -48,9 +48,6 @@ public class ClientMonitor {
 	}
 
 	public synchronized void newPackage(byte[] data, int cameraNbr) {
-		// System.out.println("packageLength: " +data.length);
-		// System.out.println(" MotionDetected: " + data[0]);
-		// System.out.println("new pic added");
 		currentPackage = data;
 		handlePackage(cameraNbr);
 
@@ -62,10 +59,7 @@ public class ClientMonitor {
 		if(currentPackage.length - 9 < 0)
 			return;
 		byte[] image = new byte[currentPackage.length - 9];
-
-		// System.out.println(currentPackage.toString().indexOf('\r'));
 		System.arraycopy(currentPackage, 0, motion, 0, 1);
-		// System.out.println("MotionDetected 2: " + motion[0]);
 		System.arraycopy(currentPackage, 1, timestamp, 0, 8);
 		System.arraycopy(currentPackage, 9, image, 0, currentPackage.length - 9);
 
@@ -73,7 +67,6 @@ public class ClientMonitor {
 		changeMotion(true);
 		}
 
-		// TODO 2 kameror
 
 //		currentImage[cameraNbr] = image;
 //		buffer.get(cameraNbr).add(new ImageClass(image, networkTravelTime(timestamp)));
@@ -103,8 +96,7 @@ public class ClientMonitor {
 			try {
 				wait();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.out.println(("Något gick fel i getLatestImage"));
 			}
 		}
 		return imageClassArray[lastImageNbr];

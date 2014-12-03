@@ -10,13 +10,11 @@ public class ServerWriter extends Thread {
 	private int[] cameraModes = new int[3];
 
 	private boolean cameraState;
-	private int cameraNbr;
 
 	public ServerWriter(ClientMonitor m, Socket socket) {
 		super();
 		// B�rjar i movie
-		cameraState = true;
-		this.cameraNbr = cameraNbr;
+		cameraState = false;
 		monitor = m;
 		this.s = socket;
 		try {

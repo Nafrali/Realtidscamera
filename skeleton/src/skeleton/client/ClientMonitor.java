@@ -30,10 +30,6 @@ public class ClientMonitor {
 
 	}
 
-	private void changeMotion(boolean newMode) {
-		systemMovie = newMode;
-	}
-
 	public synchronized boolean initMovieMode() throws InterruptedException {
 		wait();
 		return systemMovie;
@@ -55,8 +51,8 @@ public class ClientMonitor {
 		System.arraycopy(currentPackage, 1, timestamp, 0, 8);
 		System.arraycopy(currentPackage, 9, image, 0, currentPackage.length - 9);
 
-		if (motion[0] == 1) {
-			changeMotion(true);
+		if (motion[0] == 1 && mode != 2) {
+			systemMovie = true;
 		}
 
 		long travelTime = networkTravelTime(timestamp);

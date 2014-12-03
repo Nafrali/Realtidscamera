@@ -88,7 +88,7 @@ public class ClientMonitor {
 	
 
 
-	public synchronized ImageClass getLatestImage() {
+	public synchronized ImageClass getLatestImage(int cameraID) {
 		//Just nu kan den bara hämta till kamera 0
 		
 		while (!newPicture) {
@@ -98,7 +98,7 @@ public class ClientMonitor {
 				System.out.println(("Något gick fel i getLatestImage"));
 			}
 		}
-		return imageClassArray[lastImageNbr];
+		return imageClassArray[cameraID];
 //		Har att göra med buffert! Ta ej bort! // Munkenyo
 //		while (!newPicture) {
 //			try {

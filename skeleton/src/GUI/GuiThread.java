@@ -12,6 +12,7 @@ public class GuiThread extends Thread {
 
 	public GuiThread(ClientMonitor m, GUI gui, int threadID) {
 		super();
+		System.out.println("tråden initieras");
 		this.threadID=threadID;
 		this.m = m;
 		this.gui = gui;
@@ -19,9 +20,9 @@ public class GuiThread extends Thread {
 
 	public void run() {
 		while (true) {
-			currentImage = m.getLatestImage();
+			currentImage = m.getLatestImage(threadID);
 			gui.refreshImage(currentImage.getImage(), m.cameraInMovie(),
-					m.getCameraNbr(), currentImage.getTravelTime());
+					threadID, currentImage.getTravelTime());
 		}
 	}
 

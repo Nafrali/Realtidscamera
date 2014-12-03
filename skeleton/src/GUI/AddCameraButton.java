@@ -23,6 +23,7 @@ public class AddCameraButton extends JMenuItem implements ActionListener {
 		this.m = m;
 		this.camList = camList;
 		this.gui = gui;
+		threadList = new ArrayList<GuiThread>();
 		setText("Add camera");
 	}
 
@@ -46,6 +47,8 @@ public class AddCameraButton extends JMenuItem implements ActionListener {
 				camList.add(tmp);
 				tmp.start();
 				gui.addCamera();
+				threadList.add(new GuiThread(m, gui, camList.size()-1));
+				threadList.get(camList.size()-1).start();
 
 			} catch (Exception e1) {
 			}

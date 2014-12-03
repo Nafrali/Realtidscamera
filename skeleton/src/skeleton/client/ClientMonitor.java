@@ -13,11 +13,15 @@ public class ClientMonitor {
 	private boolean newPicture = false;
 	private boolean guiSynch = false;
 	private boolean newMovieSetting = false;
+	private long offset = 0;
+	private boolean firstPic = true;
+	private ImageClass[] imageClassArray;
 
 	private boolean GuiMovieMode =false;
 
 	public ClientMonitor() {
 		currentImage = new byte[2][];
+		imageClassArray = new ImageClass[2];
 		buffer = new ArrayList<LinkedList<ImageClass>>();
 		for(int i = 0; i < 2; i++){
 			buffer.add(new LinkedList<ImageClass>());
@@ -71,27 +75,30 @@ public class ClientMonitor {
 
 		// TODO 2 kameror
 
-		currentImage[cameraNbr] = image;
+//		currentImage[cameraNbr] = image;
+//		buffer.get(cameraNbr).add(new ImageClass(image, networkTravelTime(timestamp)));
+		imageClassArray[cameraNbr] = new ImageClass(image, networkTravelTime(timestamp));
 		lastImageNbr = cameraNbr;
 		newPicture = true;
-//		buffer.get(cameraNbr).add(new ImageClass(image));
 		notifyAll();
 
 	}
+	private long networkTravelTime(byte[] timestamp) {
+		long timestampLong = 0;
+		long currentTime = System.currentTimeMillis();
+		for (int i = 0; i < timestamp.length; i++) {
+			timestampLong = (timestampLong << 8) + (timestamp[i] & 0xff);
+		}
+		if (firstPic) {
+			firstPic = false;
+			offset = currentTime - timestampLong;
+		}
+		return (currentTime - offset) - timestampLong;
+	}
+	
 
-	public synchronized byte[] getLatestImage() {
+	public synchronized ImageClass getLatestImage() {
 		//Just nu kan den bara hämta till kamera 0
-//		while (buffer.get(0).isEmpty()) {
-//			try {
-//				wait();
-//			} catch (InterruptedException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		}
-//		System.out.println(buffer.get(0).size());
-//		return buffer.get(0).pop();
-		
 		while (!newPicture) {
 			try {
 				wait();
@@ -100,7 +107,17 @@ public class ClientMonitor {
 				e.printStackTrace();
 			}
 		}
-		return currentImage[lastImageNbr];
+		return imageClassArray[lastImageNbr];
+		
+//		while (!newPicture) {
+//			try {
+//				wait();
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
+//		return currentImage[lastImageNbr];
 	}
 
 	public synchronized void uppdateMovieMode(boolean movie) {

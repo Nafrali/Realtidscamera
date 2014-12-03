@@ -14,6 +14,7 @@ public class AddCameraButton extends JMenuItem implements ActionListener {
 
 	private ClientMonitor m;
 	private ArrayList<ClientSocket> camList;
+	private ArrayList<GuiThread> threadList;
 	private GUI gui;
 
 	public AddCameraButton(GUI gui, ClientMonitor m,

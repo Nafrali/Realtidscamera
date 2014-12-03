@@ -3,7 +3,7 @@ package skeleton.server;
 public class ServerMain {
 	public static void main(String[] args) {
 
-		ServerMonitor m = new ServerMonitor(5556);
+		ServerMonitor m = new ServerMonitor(5558);
 		CameraReader c = new CameraReader(m);
 		c.start();
 		JPEGHTTPServer jpeghttp = new JPEGHTTPServer(8010, m);

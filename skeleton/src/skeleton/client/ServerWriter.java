@@ -22,33 +22,23 @@ public class ServerWriter extends Thread {
 		try {
 			os = socket.getOutputStream();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Fel i SW");
 		}
 	}
 
 	public void run() {
 		while (!s.isClosed()) {
 			try {
-				boolean tmp = monitor.initMovieMode();
-				int bit = (tmp == true ? 1 : 0);
-				os.write((byte) bit % 255);
-
-			} catch (Exception e) {
-
 				boolean tmp;
-				try {
-					tmp = monitor.initMovieMode();
-					if (cameraState != tmp) {
-						int bit = (tmp == true ? 1 : 0);
-						os.write((byte) bit % 255);
-						cameraState = tmp;
-					}
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+				tmp = monitor.initMovieMode();
+				if (cameraState != tmp) {
+					int bit = (tmp == true ? 1 : 0);
+					os.write((byte) bit % 255);
+					cameraState = tmp;
 				}
 
+			} catch (Exception e) {
+				System.out.println("Fel i SW");
 			}
 
 		}

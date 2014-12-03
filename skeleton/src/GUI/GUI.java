@@ -26,19 +26,20 @@ import skeleton.client.ClientMonitor;
 import skeleton.client.ClientSocket;
 
 public class GUI extends JFrame implements ItemListener {
-
-	ClientMonitor m;
-	ArrayList<ClientSocket> camList;
-	ArrayList<ImagePanel> imagePanels;
-	JPanel displayPanel;
-	JCheckBox movie;
-	BufferedImage nocamfeed, waitingforconnect;
-	JCheckBox synch;
-	JPanel camDisplay;
-	JLabel[] delays = new JLabel[4];
-	JTextArea actionLogArea = new JTextArea();
-	boolean firstCall = true;
-	byte[] jpeg = new byte[AxisM3006V.IMAGE_BUFFER_SIZE];
+	
+	private ClientMonitor m;
+	private ArrayList<ClientSocket> camList;
+	private ArrayList<ImagePanel> imagePanels;
+	private JPanel displayPanel;
+	private JCheckBox movie;
+	private BufferedImage nocamfeed, waitingforconnect;
+	private JCheckBox synch;
+	private JPanel camDisplay;
+	private JLabel[] delays = new JLabel[4];
+	private JTextArea actionLogArea = new JTextArea();
+	private boolean firstCall = true;
+	private byte[] jpeg = new byte[AxisM3006V.IMAGE_BUFFER_SIZE];
+	public static final int MAXCAMERAS = 2; 
 
 	public GUI(ClientMonitor m) {
 		super();
@@ -52,7 +53,7 @@ public class GUI extends JFrame implements ItemListener {
 		addSyncCheckbox();
 		addMenu();
 		camDisplay = new JPanel();
-		camDisplay.setLayout(new GridLayout(2, 2));
+		camDisplay.setLayout(new GridLayout(0, 2));
 
 		displayPanel = new JPanel();
 		JPanel checkBoxPanel = new JPanel();
@@ -68,13 +69,11 @@ public class GUI extends JFrame implements ItemListener {
 			nocamfeed = ImageIO.read(new File("../files/nocamfeed.jpg"));
 			waitingforconnect = ImageIO
 					.read(new File("../files/waitforcon.jpg"));
-			for (int i = 0; i < 4; i++)
+			for (int i = 0; i < 2; i++)
 				camDisplay.add(new JLabel(new ImageIcon(nocamfeed)));
 		} catch (IOException ex) {
 			System.out.println("\"No camera feed\" image not found.");
 		}
-		// camDisplay.add(imagePanelL);
-		// camDisplay.add(imagePanelR);
 		getContentPane().add(camDisplay, BorderLayout.CENTER);
 		getContentPane().add(displayPanel, BorderLayout.SOUTH);
 
@@ -85,10 +84,11 @@ public class GUI extends JFrame implements ItemListener {
 
 	}
 
-	public void refreshImage(byte[] newPicture, boolean movieMode, int imgNbr) {
+	public void refreshImage(byte[] newPicture, boolean movieMode, int imgNbr,
+			long traveltime) {
 		jpeg = newPicture;
 		try {
-			imagePanels.get(imgNbr).refresh(jpeg);
+			imagePanels.get(imgNbr).refresh(jpeg, traveltime);
 		} catch (Exception e) {
 			addToLog("Could not refresh image: " + imgNbr
 					+ ". Camera not connected.");
@@ -102,7 +102,6 @@ public class GUI extends JFrame implements ItemListener {
 		}
 	}
 
-	@Override
 	public void itemStateChanged(ItemEvent e) {
 
 		Object source = e.getItemSelectable();
@@ -153,7 +152,7 @@ public class GUI extends JFrame implements ItemListener {
 	}
 
 	public void addCamera() {
-		ImagePanel newCam = new ImagePanel();
+		ImagePanel newCam = new ImagePanel(camList.size()-1);
 		imagePanels.add(newCam);
 		camDisplay.remove(camList.size() - 1);
 		camDisplay.add(newCam, camList.size() - 1);

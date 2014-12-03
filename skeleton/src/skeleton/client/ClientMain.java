@@ -9,6 +9,8 @@ public class ClientMain {
 		ClientMonitor monitor = new ClientMonitor();
 		GUI gui = new GUI(monitor);
 		GuiThread guiThread = new GuiThread(monitor, gui);
+
 		guiThread.start();
+
 	}
 }

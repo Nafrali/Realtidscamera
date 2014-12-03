@@ -32,6 +32,7 @@ public class GUI extends JFrame implements ItemListener {
 	ArrayList<ImagePanel> imagePanels;
 	JPanel displayPanel;
 	JCheckBox movie;
+	BufferedImage nocamfeed;
 	JCheckBox synch;
 	JPanel camDisplay;
 	JLabel[] delays = new JLabel[4];
@@ -64,8 +65,7 @@ public class GUI extends JFrame implements ItemListener {
 		displayPanel.add(actionLogArea);
 		displayPanel.add(checkBoxPanel);
 		try {
-			BufferedImage nocamfeed = ImageIO.read(new File(
-					"../files/nocamfeed.jpg"));
+			nocamfeed = ImageIO.read(new File("../files/nocamfeed.jpg"));
 			for (int i = 0; i < 4; i++)
 				camDisplay.add(new JLabel(new ImageIcon(nocamfeed)));
 		} catch (IOException ex) {
@@ -91,7 +91,7 @@ public class GUI extends JFrame implements ItemListener {
 		try {
 			imagePanels.get(imgNbr).refresh(jpeg);
 		} catch (IndexOutOfBoundsException e) {
-			addToLog("Could not refresh image: " + imgNbr + ".");
+//			addToLog("Could not refresh image: " + imgNbr + ".");
 		}
 		if (movieMode) {
 			delays[0].setText("Camera 1: Movie mode active.");
@@ -130,8 +130,10 @@ public class GUI extends JFrame implements ItemListener {
 		JMenuBar menuBar = new JMenuBar();
 		JMenu menu = new JMenu("Menu");
 		menu.setMnemonic(KeyEvent.VK_A);
-		JMenuItem addCam = new AddCameraButton(this, m, camList, imagePanels);
+		JMenuItem addCam = new AddCameraButton(this, m, camList);
+		JMenuItem remCam = new RemoveCameraButton(this, m, camList);
 		menu.add(addCam);
+		menu.add(remCam);
 		menuBar.add(menu);
 		add(menuBar, BorderLayout.NORTH);
 	}
@@ -161,5 +163,10 @@ public class GUI extends JFrame implements ItemListener {
 	public void addToLog(String string) {
 		actionLogArea.setText(string);
 
+	}
+
+	public void removeCamera(int camNbr) {
+		camDisplay.remove(camNbr - 1);
+		camDisplay.add(new JLabel(new ImageIcon(nocamfeed)), camNbr - 1);
 	}
 }

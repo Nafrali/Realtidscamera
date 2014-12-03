@@ -1,6 +1,6 @@
-package skeleton.client;
+package GUI;
 
-import GUI.GUI;
+import skeleton.client.ClientMonitor;
 
 public class GuiThread extends Thread {
 

@@ -15,7 +15,7 @@ public class ClientSocket extends Thread {
 	private ServerWriter sw;
 	private int cameraNbr;
 
-	public ClientSocket(ClientMonitor m, String address, int port, int cameraNbr) throws Exception {
+	public ClientSocket(ClientMonitor m, String address, int port, int cameraNbr) {
 		super();
 		this.cameraNbr = cameraNbr;
 		this.monitor = m;
@@ -39,33 +39,33 @@ public class ClientSocket extends Thread {
 		}
 	}
 
-	private void connect() throws UnknownHostException, IOException {
+	private void connect() {
 		boolean connected = false;
 		while (!connected) {
-//			try {
+			try {
 				s = new Socket(address, port);
 				is = s.getInputStream();
-				System.out.println("Connected to server: " + address
-						+ " at port: " + port);
+				System.out.println("Connected to server @" + address + ":"
+						+ port);
 				createWriter();
 				connected = true;
-//			} catch (UnknownHostException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			} catch (IOException e) {
-//				try {
-//					sleep(3000);
-//				} catch (InterruptedException e1) {
-//					// TODO Auto-generated catch block
-//					e1.printStackTrace();
-//				}
-//			}
+			} catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				try {
+					sleep(3000);
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
 		}
 	}
 
 	public void run() {
 		connect();
-		System.out.println("Waiting for data");
+		System.out.println("Waiting for data...");
 		while (true) {
 			try {
 				int read = 0;
@@ -91,10 +91,9 @@ public class ClientSocket extends Thread {
 					monitor.newPackage(data, cameraNbr);
 				}
 
-				
 				// TODO Camera 0 || 1
 				// Detta ska väl göras innan den senaste } ?
-//				 monitor.newPackage(data, cameraNbr);
+				// monitor.newPackage(data, cameraNbr);
 			} catch (SocketException e) {
 				try {
 					s.close();
@@ -104,9 +103,8 @@ public class ClientSocket extends Thread {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				
-			}
-			catch (IOException e) {
+
+			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

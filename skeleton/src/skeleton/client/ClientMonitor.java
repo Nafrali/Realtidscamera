@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class ClientMonitor {
-	private boolean systemMovie;
+	private boolean systemMovie = false;
+	public static final int MOVIE = 1, IDLE = 2, AUTO = 3;
 	private byte[] currentPackage;
 	private byte[][] currentImage;
 	private ArrayList<LinkedList<ImageClass>> buffer;
@@ -13,6 +14,7 @@ public class ClientMonitor {
 	private boolean newMovieSetting = false;
 	private ImageClass[] imageClassArray;
 	private final static long DELAY_MODIFIER = 300;
+	private int mode = 3;
 
 	private boolean GuiMovieMode = false;
 
@@ -32,13 +34,9 @@ public class ClientMonitor {
 		systemMovie = newMode;
 	}
 
-	private boolean isMovie() {
-		return (systemMovie);
-	}
-
 	public synchronized boolean initMovieMode() throws InterruptedException {
 		wait();
-		return isMovie();
+		return systemMovie;
 	}
 
 	public synchronized void newPackage(byte[] data, int cameraNbr) {
@@ -94,7 +92,7 @@ public class ClientMonitor {
 			}
 		}
 		// return imageClassArray[cameraID];
-		System.out.println(buffer.get(cameraID).size());
+		System.out.println(buffer.get(0).size());
 		return buffer.get(cameraID).pop();
 
 		// Har att göra med buffert! Ta ej bort! // Munkenyo
@@ -119,7 +117,16 @@ public class ClientMonitor {
 		notifyAll();
 	}
 
-	public boolean cameraInMovie() {
-		return isMovie();
+	public synchronized void setMode(int mode) {
+		this.mode = mode;
+		if (mode == 2 || mode == 3)
+			systemMovie = false;
+		else
+			systemMovie = true;
+		notifyAll();
+	}
+
+	public synchronized boolean getMode() {
+		return systemMovie;
 	}
 }

@@ -41,7 +41,7 @@ public class ServerMonitor {
 
 	public synchronized byte[] getImage() {
 
-		while ((!movieMode || imgNbr != 0) && socketReadImage) {
+		while (!((movieMode || imgNbr == 0) && socketReadImage)) {
 			try {
 				wait();
 			} catch (InterruptedException e) {

@@ -47,11 +47,11 @@ public class CameraModeRadioButtonPane extends JPanel implements ActionListener 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource().equals(movieButton)) {
-
+			m.setMode(m.MOVIE);
 		} else if (e.getSource().equals(idleButton)) {
-
+			m.setMode(m.IDLE);
 		} else if (e.getSource().equals(autoButton)) {
-
+			m.setMode(m.AUTO);
 		}
 	}
 

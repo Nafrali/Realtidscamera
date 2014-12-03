@@ -17,7 +17,7 @@ public class CameraReader extends Thread {
 
 	private void initialize() {
 		myCamera.init();
-		myCamera.setProxy("argus-1.student.lth.se", 2425);
+		myCamera.setProxy("argus-5.student.lth.se", 2425);
 		myCamera.connect();
 	}
 

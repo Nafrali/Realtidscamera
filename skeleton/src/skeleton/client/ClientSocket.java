@@ -91,9 +91,6 @@ public class ClientSocket extends Thread {
 					monitor.newPackage(data, cameraNbr);
 				}
 
-				// TODO Camera 0 || 1
-				// Detta ska väl göras innan den senaste } ?
-				// monitor.newPackage(data, cameraNbr);
 			} catch (SocketException e) {
 				try {
 					s.close();

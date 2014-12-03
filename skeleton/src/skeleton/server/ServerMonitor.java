@@ -40,9 +40,12 @@ public class ServerMonitor {
 	}
 
 	public synchronized byte[] getImage() {
-		//För att hoppa över while-loopen ska alltid socketReadImage vara false. Går vidare i movie mode, 
-		//eller om idle mode OCH det är var 125 bild.
-		while (!(!socketReadImage && ((movieMode) || (!movieMode && imgNbr == 0)))) {
+		// För att hoppa över while-loopen ska alltid socketReadImage vara
+		// false. Går vidare i movie mode,
+		// eller om idle mode OCH det är var 125 bild. Eller om motion har
+		// blivit detectat.
+		while (!(!socketReadImage && ((movieMode)
+				|| (!movieMode && imgNbr == 0) || image[0] == 1))) {
 			try {
 				wait();
 			} catch (InterruptedException e) {

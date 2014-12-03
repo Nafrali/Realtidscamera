@@ -24,7 +24,6 @@ public class TCPIPBuilder extends Thread { // RENAME!!
 		serverSocket = monitor.getServerSocket();
 	}
 
-
 	public void run() {
 
 		while (!socket.isClosed()) {

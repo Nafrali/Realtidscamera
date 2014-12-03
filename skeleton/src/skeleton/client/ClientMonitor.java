@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class ClientMonitor {
+	private int lastCameraMotionTrigger;
 	private boolean systemMovie;
 	private byte[] currentPackage;
 	private byte[][] currentImage;
@@ -64,7 +65,10 @@ public class ClientMonitor {
 		System.arraycopy(currentPackage, 9, image, 0, currentPackage.length - 9);
 
 		if(motion[0]==1){
-		changeMotion(true);
+			if(systemMovie=false){
+				lastCameraMotionTrigger=cameraNbr;
+				changeMotion(true);
+			}
 		}
 
 

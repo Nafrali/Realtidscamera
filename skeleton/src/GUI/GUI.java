@@ -20,7 +20,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 
 import se.lth.cs.eda040.fakecamera.AxisM3006V;
 import skeleton.client.ClientMonitor;
@@ -36,7 +35,7 @@ public class GUI extends JFrame implements ItemListener {
 	JCheckBox synch;
 	JPanel camDisplay;
 	JLabel[] delays = new JLabel[4];
-	JTextField actionLogArea = new JTextField();
+	JTextArea actionLogArea = new JTextArea();
 	boolean firstCall = true;
 	byte[] jpeg = new byte[AxisM3006V.IMAGE_BUFFER_SIZE];
 
@@ -86,11 +85,17 @@ public class GUI extends JFrame implements ItemListener {
 
 	public void refreshImage(byte[] newPicture, boolean movieMode, int imgNbr) {
 		jpeg = newPicture;
-		imagePanels.get(imgNbr).refresh(jpeg);
+		if (imagePanels.size() == 0) {
+			return;
+		}
+		try {
+			imagePanels.get(imgNbr).refresh(jpeg);
+		} catch (IndexOutOfBoundsException e) {
+			addToLog("Could not refresh image: " + imgNbr + ".");
+		}
 		if (movieMode) {
 			delays[0].setText("Camera 1: Movie mode active.");
 			delays[1].setText("Camera 2: Movie mode active.");
-			movie.setSelected(true);
 		} else if (!movieMode) {
 			delays[0].setText("Camera 1: Movie mode inactive.");
 			delays[1].setText("Camera 2: Movie mode inactive.");

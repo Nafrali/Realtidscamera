@@ -18,7 +18,7 @@ public class ServerMain {
 		System.out.println("Listening at port " + port);
 		ServerMonitor m = new ServerMonitor(port);
 
-		CameraReader c = new CameraReader(m);
+		CameraReader c = new CameraReader(m, args[1], args[2]);
 		c.start();
 		JPEGHTTPServer jpeghttp = new JPEGHTTPServer(8010, m);
 		jpeghttp.start();

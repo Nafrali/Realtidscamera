@@ -9,11 +9,12 @@ public class GuiThread extends Thread {
 	private GUI gui;
 	private ImageClass currentImage;
 	private int threadID;
+	boolean firsttime = true;
 
 	public GuiThread(ClientMonitor m, GUI gui, int threadID) {
 		super();
 		System.out.println("tråden initieras");
-		this.threadID=threadID;
+		this.threadID = threadID;
 		this.m = m;
 		this.gui = gui;
 	}
@@ -27,8 +28,12 @@ public class GuiThread extends Thread {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			gui.refreshImage(currentImage.getImage(), m.getMode(),
-					threadID, currentImage.getTravelTime());
+			gui.refreshImage(currentImage.getImage(), m.getMode(), threadID,
+					currentImage.getTravelTime());
+			if (firsttime) {
+				gui.addCamera();
+				firsttime = false;
+			}
 		}
 	}
 

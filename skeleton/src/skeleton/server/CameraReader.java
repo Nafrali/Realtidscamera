@@ -5,19 +5,23 @@ import se.lth.cs.eda040.proxycamera.AxisM3006V;
 public class CameraReader extends Thread {
 	private ServerMonitor m;
 	private AxisM3006V myCamera;
+	private String camera;
+	private int port;
 	private final byte DELIMITER = (byte) '\n';
 	private final byte ENDBYTE = (byte) '\r';
 
-	public CameraReader(ServerMonitor m) {
+	public CameraReader(ServerMonitor m, String camera, String portString) {
 		super();
 		this.m = m;
+		this.camera=camera;
+		port = Integer.parseInt(portString);
 		myCamera = new AxisM3006V();
 
 	}
 
 	private void initialize() {
 		myCamera.init();
-		myCamera.setProxy("argus-5.student.lth.se", 2425);
+		myCamera.setProxy(camera, port);
 		myCamera.connect();
 	}
 

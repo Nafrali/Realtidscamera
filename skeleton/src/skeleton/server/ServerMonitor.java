@@ -7,7 +7,7 @@ public class ServerMonitor {
 	private ServerSocket serverSocket;
 	private byte[] image;
 	private boolean movieMode;
-	private boolean socketReadImage;
+	private boolean socketReadImage, idle;
 	private int imgNbr;
 
 	public ServerMonitor(int port) {
@@ -27,11 +27,12 @@ public class ServerMonitor {
 
 	public synchronized void setMovieMode(boolean movie) {
 		movieMode = movie;
+		idle = false;
 	}
 
 	public synchronized void storeImage(byte[] image) {
 		this.image = image;
-		if (!movieMode && image[0] == (byte) 1) {
+		if (!movieMode && image[0] == (byte) 1 && !idle) {
 			setMovieMode(true);
 		}
 		socketReadImage = false;
@@ -44,8 +45,7 @@ public class ServerMonitor {
 		// false. Går vidare i movie mode,
 		// eller om idle mode OCH det är var 125 bild. Eller om motion har
 		// blivit detectat.
-		while (!(!socketReadImage && ((movieMode)
-				|| (!movieMode && imgNbr == 0) || image[0] == 1))) {
+		while (!(!socketReadImage && ((movieMode) || (!movieMode && imgNbr == 0)))) {
 			try {
 				wait();
 			} catch (InterruptedException e) {
@@ -54,6 +54,10 @@ public class ServerMonitor {
 		}
 		socketReadImage = true;
 		return image;
+	}
+
+	public synchronized void forceIdle() {
+		idle = true;
 	}
 
 }

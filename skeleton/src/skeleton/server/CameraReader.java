@@ -1,6 +1,6 @@
 package skeleton.server;
 
-import se.lth.cs.eda040.proxycamera.AxisM3006V;
+import se.lth.cs.eda040.realcamera.AxisM3006V;
 
 public class CameraReader extends Thread {
 	private ServerMonitor m;
@@ -11,10 +11,11 @@ public class CameraReader extends Thread {
 	private final byte ENDBYTE = (byte) '\r';
 
 	public CameraReader(ServerMonitor m, String camera, String portString) {
+//	public CameraReader(ServerMonitor m) {
 		super();
 		this.m = m;
 		this.camera=camera;
-		port = Integer.parseInt(portString);
+		this.port = Integer.parseInt(portString);
 		myCamera = new AxisM3006V();
 
 	}

@@ -55,6 +55,8 @@ public class ServerSocketHandler extends Thread {
 					} else if (n == -1) {
 						destroyBuilder();
 						socket.close();
+					} else if (n == 2) {
+						monitor.forceIdle();
 					} else
 						monitor.setMovieMode(false);
 				} catch (SocketException e) {

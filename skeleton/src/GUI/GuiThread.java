@@ -26,8 +26,10 @@ public class GuiThread extends Thread {
 				try {
 					if (!firstTimeAsynch)
 						firstTimeAsynch = true;
-					sleep(currentImage.getShowTime()
-							- System.currentTimeMillis());
+					long sleepTime = currentImage.getShowTime()
+							- System.currentTimeMillis();
+					if (sleepTime > 0)
+						sleep(sleepTime);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -36,14 +38,13 @@ public class GuiThread extends Thread {
 				gui.uncheckSynch();
 				firstTimeAsynch = false;
 			}
-			gui.refreshImage(currentImage.getImage(), m.getMode(), threadID,
-					currentImage.getTravelTime());
+			gui.refreshImage(currentImage.getImage(), m.systemInMovie(),
+					threadID, currentImage.getTravelTime());
 			if (firsttimerun) {
-				gui.addCamera();
+				gui.showCamera();
 				gui.addToLog("Connection established.");
 				firsttimerun = false;
 			}
 		}
 	}
-
 }

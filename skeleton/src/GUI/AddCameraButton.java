@@ -14,7 +14,6 @@ public class AddCameraButton extends JMenuItem implements ActionListener {
 
 	private ClientMonitor m;
 	private ArrayList<ClientSocket> camList;
-	private ArrayList<GuiThread> threadList;
 	private GUI gui;
 
 	public AddCameraButton(GUI gui, ClientMonitor m,
@@ -23,32 +22,25 @@ public class AddCameraButton extends JMenuItem implements ActionListener {
 		this.m = m;
 		this.camList = camList;
 		this.gui = gui;
-		threadList = new ArrayList<GuiThread>();
 		setText("Add camera");
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		if (camList.size() >= gui.MAXCAMERAS) {
-			gui.addToLog("Maximum amount of cameras (" + gui.MAXCAMERAS
+		if (camList.size() >= GUI.MAXCAMERAS) {
+			gui.addToLog("Maximum amount of cameras (" + GUI.MAXCAMERAS
 					+ ") already added.");
 
 		} else {
 			JFrame frame = new JFrame("Enter address of the new camera");
-			String address = JOptionPane.showInputDialog(frame,
-					"New camera ip:");
+			String host = JOptionPane.showInputDialog(frame, "New camera ip:");
 			String stringPort = JOptionPane.showInputDialog(frame,
 					"New camera port:");
 			int port = 0;
 			try {
 				port = Integer.parseInt(stringPort);
-				gui.addToLog("Trying to connect to camera @" + address + ":" + port + "...");
-				ClientSocket tmp = new ClientSocket(m, address, port,
-						camList.size());
-				camList.add(tmp);
-				tmp.start();
-				gui.setWaitImage(camList.size() - 1);
-				threadList.add(new GuiThread(m, gui, camList.size() - 1));
-				threadList.get(camList.size() - 1).start();
+				gui.addToLog("Trying to connect to camera @" + host + ":"
+						+ port + "...");
+				gui.addCamera(host, port);
 
 			} catch (Exception e1) {
 			}

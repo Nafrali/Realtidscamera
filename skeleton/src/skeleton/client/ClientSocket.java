@@ -55,7 +55,7 @@ public class ClientSocket extends Thread {
 				try {
 					sleep(3000);
 				} catch (InterruptedException e1) {
-					System.out.println("Något gick fel");
+					System.out.println("Connection attempt failed");
 				}
 			}
 		}

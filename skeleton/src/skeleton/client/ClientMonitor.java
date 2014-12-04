@@ -14,19 +14,12 @@ public class ClientMonitor {
 
 	private boolean systemMovie = false;
 	private byte[] currentPackage;
-	private byte[][] currentImage;
 	private ArrayList<LinkedList<ImageClass>> buffer;
-	private boolean newPicture = false;
 	private boolean synch = true;
-	private boolean newMovieSetting = false;
-	private ImageClass[] imageClassArray;
 	private int mode = Constants.AUTO;
-
-	private boolean GuiMovieMode = false;
+	private int triggerCam = -1;
 
 	public ClientMonitor() {
-		currentImage = new byte[4][];
-		imageClassArray = new ImageClass[2];
 		buffer = new ArrayList<LinkedList<ImageClass>>();
 		for (int i = 0; i < 2; i++) {
 			buffer.add(new LinkedList<ImageClass>());
@@ -56,9 +49,10 @@ public class ClientMonitor {
 		System.arraycopy(currentPackage, 1, timestamp, 0, 8);
 		System.arraycopy(currentPackage, 9, image, 0, currentPackage.length - 9);
 
-		if (motion[0] == 1 && mode != 2)
+		if (motion[0] == 1 && mode != 2 && !systemMovie) {
+			triggerCam = cameraNbr;
 			systemMovie = true;
-
+		}
 		long travelTime = networkTravelTime(timestamp);
 		long showTime = System.currentTimeMillis()
 				+ (Constants.DELAY_MODIFIER - travelTime);
@@ -76,7 +70,6 @@ public class ClientMonitor {
 		}
 		// imageClassArray[cameraNbr] = new ImageClass(image,
 		// networkTravelTime(timestamp));
-		newPicture = true;
 		notifyAll();
 
 	}
@@ -126,6 +119,7 @@ public class ClientMonitor {
 	}
 
 	public synchronized void setMode(int mode) {
+		triggerCam = -1;
 		this.mode = mode;
 		if (mode == Constants.IDLE || mode == Constants.AUTO)
 			systemMovie = false;
@@ -134,22 +128,15 @@ public class ClientMonitor {
 		notifyAll();
 	}
 
-	public synchronized boolean getMode() {
+	public synchronized int getMode() {
+		return mode;
+	}
+
+	public synchronized boolean systemInMovie() {
 		return systemMovie;
 	}
 
-	public synchronized byte[] extractBytes() {
-		BufferedImage bufferedImage;
-		DataBufferByte data = new DataBufferByte(0);
-		try {
-			bufferedImage = ImageIO.read(new File("../files/waitforcon.jpg"));
-			WritableRaster raster = bufferedImage.getRaster();
-			data = (DataBufferByte) raster.getDataBuffer();
-
-		} catch (IOException e) {
-			System.out.println("Wait for connection image not found.");
-			e.printStackTrace();
-		}
-		return (data.getData());
+	public synchronized int triggeredBy() {
+		return triggerCam;
 	}
 }

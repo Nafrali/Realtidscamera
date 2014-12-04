@@ -14,15 +14,16 @@ class ImagePanel extends JPanel {
 		super();
 		this.camNbr = camNbr;
 		picture = new JLabel(new ImageIcon());
-		text = new JLabel("Camera " + (camNbr + 1) + ". Network travel time: 0ms");
+		text = new JLabel("Camera " + (camNbr + 1)
+				+ ". Network travel time: 0ms");
 		add(text, BorderLayout.SOUTH);
 		add(picture, BorderLayout.CENTER);
 		this.setSize(200, 200);
 	}
 
-	public void refresh(byte[] data, long nettraveltime) {
+	public void refresh(byte[] data, long nettraveltime, String modeChange) {
 		text.setText("Camera " + (camNbr + 1) + ". Network travel time: "
-				+ nettraveltime + "ms");
+				+ nettraveltime + "ms" + "   " + modeChange);
 		picture.setIcon(new ImageIcon(data));
 
 	}

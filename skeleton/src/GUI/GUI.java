@@ -24,28 +24,31 @@ import javax.swing.JTextArea;
 import se.lth.cs.eda040.fakecamera.AxisM3006V;
 import skeleton.client.ClientMonitor;
 import skeleton.client.ClientSocket;
+import skeleton.client.Constants;
 
 public class GUI extends JFrame implements ItemListener {
 
 	private ClientMonitor m;
 	private ArrayList<ClientSocket> camList;
 	private ArrayList<ImagePanel> imagePanels;
+	private ArrayList<GuiThread> threadList;
 	private JPanel displayPanel;
 	private BufferedImage nocamfeed, waitingforconnect;
 	private JCheckBox synch;
 	private JPanel camDisplay;
 	private JLabel systemMode;
-	private JTextArea actionLogArea = new JTextArea(10, 10);
+	private MessageArea actionLogArea = new MessageArea();
 	private byte[] jpeg = new byte[AxisM3006V.IMAGE_BUFFER_SIZE];
 	public static final int MAXCAMERAS = 2;
+	private String modeChange = "";
 
 	public GUI(ClientMonitor m) {
 		super();
 		this.m = m;
-		actionLogArea.setEditable(false);
 		getContentPane().setLayout(new BorderLayout());
 		camList = new ArrayList<ClientSocket>();
 		imagePanels = new ArrayList<ImagePanel>();
+		threadList = new ArrayList<GuiThread>();
 		addSyncCheckbox();
 		addMenu();
 		camDisplay = new JPanel();
@@ -78,14 +81,17 @@ public class GUI extends JFrame implements ItemListener {
 		pack();
 		setVisible(true);
 		setResizable(false);
-
 	}
 
 	public void refreshImage(byte[] newPicture, boolean movieMode, int imgNbr,
 			long traveltime) {
 		jpeg = newPicture;
 		try {
-			imagePanels.get(imgNbr).refresh(jpeg, traveltime);
+			if (m.triggeredBy() == imgNbr) {
+				modeChange = "Triggered movie mode!";
+			}
+			imagePanels.get(imgNbr).refresh(jpeg, traveltime, modeChange);
+			modeChange = "";
 			if (movieMode)
 				systemMode.setText("System in movie mode");
 			else
@@ -97,8 +103,6 @@ public class GUI extends JFrame implements ItemListener {
 	}
 
 	public void itemStateChanged(ItemEvent e) {
-
-		Object source = e.getItemSelectable();
 
 		if (e.getStateChange() == ItemEvent.SELECTED)
 			m.uppdateSynchMode(true);
@@ -112,7 +116,7 @@ public class GUI extends JFrame implements ItemListener {
 		JMenu menu = new JMenu("Menu");
 		menu.setMnemonic(KeyEvent.VK_A);
 		JMenuItem addCam = new AddCameraButton(this, m, camList);
-		JMenuItem remCam = new RemoveCameraButton(this, m, camList);
+		JMenuItem remCam = new RemoveCameraButton(this, m);
 		menu.add(addCam);
 		menu.add(remCam);
 		menuBar.add(menu);
@@ -124,13 +128,6 @@ public class GUI extends JFrame implements ItemListener {
 		synch.setMnemonic(KeyEvent.VK_S);
 		synch.setSelected(true);
 		synch.addItemListener(this);
-	}
-
-	public void addCamera() {
-		ImagePanel newCam = new ImagePanel(camList.size() - 1);
-		imagePanels.add(newCam);
-		camDisplay.remove(camList.size() - 1);
-		camDisplay.add(newCam, camList.size() - 1);
 	}
 
 	public void addToLog(String string) {
@@ -146,11 +143,6 @@ public class GUI extends JFrame implements ItemListener {
 
 	}
 
-	public void removeCamera(int camNbr) {
-		camDisplay.remove(camNbr - 1);
-		camDisplay.add(new JLabel(new ImageIcon(nocamfeed)), camNbr - 1);
-	}
-
 	public void setWaitImage(int camNbr) {
 		camDisplay.remove(camNbr);
 		camDisplay.add(new JLabel(new ImageIcon(waitingforconnect)), camNbr);
@@ -159,5 +151,44 @@ public class GUI extends JFrame implements ItemListener {
 	public void uncheckSynch() {
 		synch.setSelected(false);
 		addToLog("Network travel time too long, synchronous mode deactivated");
+	}
+
+	public Thread getThread(int i) {
+		return threadList.get(i);
+	}
+
+	public void addCamera(String host, int port) {
+		setWaitImage(camList.size());
+		GuiThread newThread = new GuiThread(m, this, camList.size());
+		ClientSocket newSocket = new ClientSocket(m, host, port, camList.size());
+		threadList.add(newThread);
+		camList.add(newSocket);
+		newSocket.start();
+		newThread.start();
+	}
+
+	public void removeCamera(int camNbr) {
+		camDisplay.remove(camNbr);
+		camDisplay.add(new JLabel(new ImageIcon(nocamfeed)), camNbr);
+		GuiThread currentThread = threadList.get(camNbr);
+		ClientSocket currentSocket = camList.get(camNbr);
+		try {
+			currentThread.interrupt();
+			currentSocket.interrupt();
+			currentThread.join();
+			currentSocket.join();
+			threadList.remove(camNbr);
+			camList.remove(camNbr);
+		} catch (InterruptedException e) {
+			addToLog("Internal error: Camera could not be successfully removed.");
+		}
+	}
+
+	public void showCamera() {
+		ImagePanel newCam = new ImagePanel(camList.size() - 1);
+		imagePanels.add(newCam);
+		camDisplay.remove(camList.size() - 1);
+		camDisplay.add(newCam, camList.size() - 1);
+
 	}
 }

@@ -1,20 +1,5 @@
 TODOs
-
-
-3.	11. and what camera server triggered the
-	latest movie mode
-
-5.	15.
-	It should be possible via the client (either as part of the GUI or as debug
-	options) to enforce synchronous mode as well as asynchronous mode. 
-	
-Kolla om idle verkligen funkar.
-
-Sleep negativ ger crash (pga asynkront/inte?).
-
-
-Testa Oskars saker (kanske inte funkar med forced idle mode)
-
+WOHOOOO
 Refactor
 skriva dokumentation
 Ta bort package och liknande (Finns på d-sek hemsida hur man gör)

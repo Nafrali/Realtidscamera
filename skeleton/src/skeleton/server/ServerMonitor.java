@@ -32,9 +32,7 @@ public class ServerMonitor {
 
 	public synchronized void storeImage(byte[] image) {
 		this.image = image;
-		System.out.println(movieMode + " "+ idle + " motion: " + image[4]);
 		if (!movieMode && image[4] == (byte) 1 && !idle) {
-			System.out.println("Fick motion!");
 			setMovieMode(true);
 		}
 		socketReadImage = false;

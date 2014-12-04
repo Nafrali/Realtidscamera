@@ -17,7 +17,7 @@ public class ServerWriter extends Thread {
 		try {
 			os = socket.getOutputStream();
 		} catch (IOException e) {
-			System.out.println("Fel i SW");
+			System.out.println("ServerWriter creation error, no output stream available.");
 		}
 	}
 
@@ -29,11 +29,10 @@ public class ServerWriter extends Thread {
 				if (tmp != lastMode) {				
 					os.write((byte) tmp % 255);
 					lastMode = tmp;
-					System.out.println("Nytt mode");
 				}			
 
 			} catch (Exception e) {
-				System.out.println("Fel i SW");
+				System.out.println("ServerWriter runtime error");
 			}
 
 		}

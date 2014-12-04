@@ -25,7 +25,7 @@ public class ServerSocketHandler extends Thread {
 		try {
 			builder.join();
 		} catch (InterruptedException e) {
-			System.out.println("Fel i serverSocketHandler");
+			System.out.println("serverSocketHandler error");
 		}
 	}
 
@@ -42,7 +42,7 @@ public class ServerSocketHandler extends Thread {
 				System.out.println("Client connected");
 				createBuilder();
 			} catch (IOException e) {
-				System.out.println("Fel i serverSocketHandler");
+				System.out.println("serverSocketHandler error");
 			}
 			
 			while (!socket.isClosed()) {
@@ -52,16 +52,13 @@ public class ServerSocketHandler extends Thread {
 					int n = is.read(data);
 					if (data[0] == 1) {
 						monitor.setMovieMode(true);
-						System.out.println("I moviemode");
 					} else if (n == -1) {
 						destroyBuilder();
 						socket.close();
 					} else if (data[0] == 2) {
-						monitor.forceIdle(true);
-						System.out.println("I forceIdle");					}
+						monitor.forceIdle(true);				}
 					else if(data[0]==3){
 						monitor.forceIdle(false);
-						System.out.println("I auto?");
 					}
 					else
 						monitor.setMovieMode(false);
@@ -73,10 +70,10 @@ public class ServerSocketHandler extends Thread {
 						if (socket.isClosed())
 						destroyBuilder();
 					} catch (IOException e1) {
-						System.out.println("Fel i serverSocketHandler");
+						System.out.println("serverSocketHandler error");
 					}
 				} catch (IOException e) {
-					System.out.println("Fel i serverSocketHandler");
+					System.out.println("serverSocketHandler error");
 				}
 			}
 		}

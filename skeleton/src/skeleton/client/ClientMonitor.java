@@ -13,16 +13,14 @@ import javax.imageio.ImageIO;
 public class ClientMonitor {
 
 	private boolean systemMovie = false;
-	public static final int MOVIE = 1, IDLE = 2, AUTO = 3;
 	private byte[] currentPackage;
 	private byte[][] currentImage;
 	private ArrayList<LinkedList<ImageClass>> buffer;
 	private boolean newPicture = false;
-	private boolean guiSynch = false;
+	private boolean synch = true;
 	private boolean newMovieSetting = false;
 	private ImageClass[] imageClassArray;
-	private final static long DELAY_MODIFIER = 300;
-	private int mode = 3;
+	private int mode = Constants.AUTO;
 
 	private boolean GuiMovieMode = false;
 
@@ -58,16 +56,24 @@ public class ClientMonitor {
 		System.arraycopy(currentPackage, 1, timestamp, 0, 8);
 		System.arraycopy(currentPackage, 9, image, 0, currentPackage.length - 9);
 
-
-		if (motion[0] == 1 && mode != 2) {
+		if (motion[0] == 1 && mode != 2)
 			systemMovie = true;
-		}
 
 		long travelTime = networkTravelTime(timestamp);
 		long showTime = System.currentTimeMillis()
-				+ (DELAY_MODIFIER - travelTime);
+				+ (Constants.DELAY_MODIFIER - travelTime);
 
-		buffer.get(cameraNbr).add(new ImageClass(image, travelTime, showTime));
+		// villkoret för att gå ur synchronized, dvs negativ väntetid
+		if (travelTime > Constants.DELAY_MODIFIER)
+			synch = false;
+
+		if (synch) {
+			buffer.get(cameraNbr).add(
+					new ImageClass(image, travelTime, showTime));
+		} else {
+			buffer.get(cameraNbr).add(
+					new ImageClass(image, travelTime, Constants.NO_SYNCH));
+		}
 		// imageClassArray[cameraNbr] = new ImageClass(image,
 		// networkTravelTime(timestamp));
 		newPicture = true;
@@ -96,7 +102,6 @@ public class ClientMonitor {
 			}
 		}
 		// return imageClassArray[cameraID];
-		System.out.println(buffer.get(0).size());
 		return buffer.get(cameraID).pop();
 
 		// Har att göra med buffert! Ta ej bort! // Munkenyo
@@ -116,14 +121,13 @@ public class ClientMonitor {
 		notifyAll();
 	}
 
-	public synchronized void uppdateSynchMode(boolean synch) {
-		guiSynch = synch;
-		notifyAll();
+	public synchronized void uppdateSynchMode(boolean guiSynch) {
+		synch = guiSynch;
 	}
 
 	public synchronized void setMode(int mode) {
 		this.mode = mode;
-		if (mode == 2 || mode == 3)
+		if (mode == Constants.IDLE || mode == Constants.AUTO)
 			systemMovie = false;
 		else
 			systemMovie = true;

@@ -19,6 +19,7 @@ public class ServerMain {
 		System.out.println("Listening at port " + port);
 		ServerMonitor m = new ServerMonitor(port);
 
+		// args[1] = camera t.ex. argus-1.student.lth.se args[2] = camera porten t.ex. 2425
 		CameraReader c = new CameraReader(m, args[1], args[2]);
 //		CameraReader c = new CameraReader(m);
 		c.start();		

@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
 import skeleton.client.ClientMonitor;
+import skeleton.client.Constants;
 
 public class CameraModeRadioButtonPane extends JPanel implements ActionListener {
 
@@ -47,11 +48,11 @@ public class CameraModeRadioButtonPane extends JPanel implements ActionListener 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource().equals(movieButton)) {
-			m.setMode(m.MOVIE);
+			m.setMode(Constants.MOVIE);
 		} else if (e.getSource().equals(idleButton)) {
-			m.setMode(m.IDLE);
+			m.setMode(Constants.IDLE);
 		} else if (e.getSource().equals(autoButton)) {
-			m.setMode(m.AUTO);
+			m.setMode(Constants.AUTO);
 		}
 	}
 

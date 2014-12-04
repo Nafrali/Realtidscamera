@@ -35,7 +35,7 @@ public class GUI extends JFrame implements ItemListener {
 	private JCheckBox synch;
 	private JPanel camDisplay;
 	private JLabel systemMode;
-	private JTextArea actionLogArea = new JTextArea();
+	private JTextArea actionLogArea = new JTextArea(10, 10);
 	private byte[] jpeg = new byte[AxisM3006V.IMAGE_BUFFER_SIZE];
 	public static final int MAXCAMERAS = 2;
 
@@ -59,7 +59,7 @@ public class GUI extends JFrame implements ItemListener {
 		modeSelectionPanel.add(new CameraModeRadioButtonPane(this, m),
 				BorderLayout.WEST);
 		modeSelectionPanel.add(synch, BorderLayout.EAST);
-		modeSelectionPanel.add(systemMode, BorderLayout.CENTER);
+		modeSelectionPanel.add(systemMode, BorderLayout.NORTH);
 		displayPanel.add(actionLogArea);
 		displayPanel.add(modeSelectionPanel);
 		try {
@@ -134,7 +134,15 @@ public class GUI extends JFrame implements ItemListener {
 	}
 
 	public void addToLog(String string) {
-		actionLogArea.append(string);
+		// String text = actionLogArea.getText();
+		// String[] lines = text.split("\n");
+		// if (lines.length > 5) {
+		// for (int i = 0; i > 4; i++) {
+		// text = lines[i + 1];
+		// }
+		// }
+		// actionLogArea.setText(text + string + "\n");
+		actionLogArea.append(string + "\n");
 
 	}
 
@@ -146,5 +154,10 @@ public class GUI extends JFrame implements ItemListener {
 	public void setWaitImage(int camNbr) {
 		camDisplay.remove(camNbr);
 		camDisplay.add(new JLabel(new ImageIcon(waitingforconnect)), camNbr);
+	}
+
+	public void uncheckSynch() {
+		synch.setSelected(false);
+		addToLog("Network travel time too long, synchronous mode deactivated");
 	}
 }

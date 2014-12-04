@@ -52,13 +52,20 @@ public class ServerSocketHandler extends Thread {
 					int n = is.read(data);
 					if (data[0] == 1) {
 						monitor.setMovieMode(true);
+						System.out.println("I moviemode");
 					} else if (n == -1) {
 						destroyBuilder();
 						socket.close();
-					} else if (n == 2) {
-						monitor.forceIdle();
-					} else
+					} else if (data[0] == 2) {
+						monitor.forceIdle(true);
+						System.out.println("I forceIdle");					}
+					else if(data[0]==3){
+						monitor.forceIdle(false);
+						System.out.println("I auto?");
+					}
+					else
 						monitor.setMovieMode(false);
+					
 				} catch (SocketException e) {
 					System.out.println("Client disconnected");					
 					try {

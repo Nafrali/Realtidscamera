@@ -7,14 +7,11 @@ public class ServerWriter extends Thread {
 	private Socket s;
 	private OutputStream os;
 	private ClientMonitor monitor;
-	private int[] cameraModes = new int[3];
-
-	private boolean cameraState;
+	private int lastMode = 234;
 
 	public ServerWriter(ClientMonitor m, Socket socket) {
 		super();
 		// B�rjar i movie
-		cameraState = false;
 		monitor = m;
 		this.s = socket;
 		try {
@@ -27,13 +24,13 @@ public class ServerWriter extends Thread {
 	public void run() {
 		while (!s.isClosed()) {
 			try {
-				boolean tmp;
+				int tmp;
 				tmp = monitor.initMovieMode();
-				if (cameraState != tmp) {
-					int bit = (tmp == true ? 1 : 0);
-					os.write((byte) bit % 255);
-					cameraState = tmp;
-				}
+				if (tmp != lastMode) {				
+					os.write((byte) tmp % 255);
+					lastMode = tmp;
+					System.out.println("Nytt mode");
+				}			
 
 			} catch (Exception e) {
 				System.out.println("Fel i SW");

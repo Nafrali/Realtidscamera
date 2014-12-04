@@ -1,6 +1,6 @@
 package skeleton.server;
 
-import se.lth.cs.eda040.realcamera.AxisM3006V;
+import se.lth.cs.eda040.proxycamera.AxisM3006V;
 
 public class CameraReader extends Thread {
 	private ServerMonitor m;

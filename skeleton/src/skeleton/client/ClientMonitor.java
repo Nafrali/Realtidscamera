@@ -37,9 +37,9 @@ public class ClientMonitor {
 
 	}
 
-	public synchronized boolean initMovieMode() throws InterruptedException {
+	public synchronized int initMovieMode() throws InterruptedException {
 		wait();
-		return systemMovie;
+		return mode;
 	}
 
 	public synchronized void newPackage(byte[] data, int cameraNbr) {

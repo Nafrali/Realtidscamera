@@ -7,8 +7,9 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import skeleton.client.ClientMonitor;
-import skeleton.client.ClientSocket;
+
+import client.ClientMonitor;
+import client.ClientSocket;
 
 public class AddCameraButton extends JMenuItem implements ActionListener {
 

@@ -21,10 +21,10 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
+import client.ClientMonitor;
+import client.ClientSocket;
+import client.Constants;
 import se.lth.cs.eda040.fakecamera.AxisM3006V;
-import skeleton.client.ClientMonitor;
-import skeleton.client.ClientSocket;
-import skeleton.client.Constants;
 
 public class GUI extends JFrame implements ItemListener {
 
@@ -131,14 +131,6 @@ public class GUI extends JFrame implements ItemListener {
 	}
 
 	public void addToLog(String string) {
-		// String text = actionLogArea.getText();
-		// String[] lines = text.split("\n");
-		// if (lines.length > 5) {
-		// for (int i = 0; i > 4; i++) {
-		// text = lines[i + 1];
-		// }
-		// }
-		// actionLogArea.setText(text + string + "\n");
 		actionLogArea.append(string + "\n");
 
 	}
@@ -168,20 +160,19 @@ public class GUI extends JFrame implements ItemListener {
 	}
 
 	public void removeCamera(int camNbr) {
+		try {
+			threadList.get(camNbr).killThread();
+			threadList.get(camNbr).join();
+			addToLog(camList.get(camNbr).killSocket());
+			camList.get(camNbr).join();
+		} catch (InterruptedException e) {
+			addToLog("Failed to stop camera threads.");
+		}
+		threadList.remove(camNbr);
+		camList.remove(camNbr);
 		camDisplay.remove(camNbr);
 		camDisplay.add(new JLabel(new ImageIcon(nocamfeed)), camNbr);
-		GuiThread currentThread = threadList.get(camNbr);
-		ClientSocket currentSocket = camList.get(camNbr);
-		try {
-			currentThread.interrupt();
-			currentSocket.interrupt();
-			currentThread.join();
-			currentSocket.join();
-			threadList.remove(camNbr);
-			camList.remove(camNbr);
-		} catch (InterruptedException e) {
-			addToLog("Internal error: Camera could not be successfully removed.");
-		}
+
 	}
 
 	public void showCamera() {

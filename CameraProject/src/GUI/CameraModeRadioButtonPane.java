@@ -8,8 +8,8 @@ import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
-import skeleton.client.ClientMonitor;
-import skeleton.client.Constants;
+import client.ClientMonitor;
+import client.Constants;
 
 public class CameraModeRadioButtonPane extends JPanel implements ActionListener {
 

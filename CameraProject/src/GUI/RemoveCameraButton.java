@@ -7,7 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
-import skeleton.client.ClientMonitor;
+import client.ClientMonitor;
 
 public class RemoveCameraButton extends JMenuItem implements ActionListener {
 

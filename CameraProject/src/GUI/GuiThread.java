@@ -1,8 +1,8 @@
 package GUI;
 
-import skeleton.client.ClientMonitor;
-import skeleton.client.Constants;
-import skeleton.client.ImageClass;
+import client.ClientMonitor;
+import client.Constants;
+import client.ImageClass;
 
 public class GuiThread extends Thread {
 
@@ -10,7 +10,7 @@ public class GuiThread extends Thread {
 	private GUI gui;
 	private ImageClass currentImage;
 	private int threadID;
-	boolean firsttimerun = true, firstTimeAsynch = true;
+	boolean firsttimerun = true, firstTimeAsynch = true, run = true;
 
 	public GuiThread(ClientMonitor m, GUI gui, int threadID) {
 		super();
@@ -19,8 +19,12 @@ public class GuiThread extends Thread {
 		this.gui = gui;
 	}
 
+	public synchronized void killThread() {
+		run = false;
+	}
+
 	public void run() {
-		while (true) {
+		while (run) {
 			currentImage = m.getLatestImage(threadID);
 			if (currentImage.getShowTime() != Constants.NO_SYNCH) {
 				try {

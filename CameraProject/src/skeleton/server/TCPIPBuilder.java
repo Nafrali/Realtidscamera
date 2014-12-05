@@ -34,8 +34,12 @@ public class TCPIPBuilder extends Thread { // RENAME!!
 				byte[] data = monitor.getImage();
 				try {
 					os.write(data); 
-					socket.close();
+					
 				} catch (IOException e) {
+					try {
+						socket.close();
+					} catch (IOException e1) {
+					}
 					System.out.println("Could not transmit.");
 				}
 			}

@@ -32,7 +32,6 @@ public class ClientSocket extends Thread {
 			return "Connection failed to close.";
 		}
 		destroyWriter();
-		connect();
 		return "Connection successfully closed.";
 	}
 
@@ -72,41 +71,47 @@ public class ClientSocket extends Thread {
 				}
 			}
 		}
+		System.out.println("Waiting for data...");
 	}
 
 	public void run() {
 		connect();
-		System.out.println("Waiting for data...");
+
 		while (run) {
 			try {
 				int read = 0;
 				byte[] packetLength = new byte[4];
-				if (is.read(packetLength, 0, 4) == -1) {
-					is = null;
+				try {
+					if (is.read(packetLength, 0, 4) == -1) {
+						is = null;
+						s.close();
+						destroyWriter();
+
+					} else {
+						int length = 0;
+						for (int i = 0; i < packetLength.length; i++) {
+							length = (length << 8) + (packetLength[i] & 0xff);
+						}
+						byte[] data = new byte[length];
+
+						while (read < length) {
+							int n = is.read(data, read, length - read); // Blocking
+							if (n == -1)
+								throw new IOException("Corrupted data.");
+							read += n;
+						}
+						monitor.newPackage(data, cameraNbr);
+					}
+				} catch (NullPointerException e) {
 					s.close();
 					destroyWriter();
 					connect();
-				} else {
-					int length = 0;
-					for (int i = 0; i < packetLength.length; i++) {
-						length = (length << 8) + (packetLength[i] & 0xff);
-					}
-					byte[] data = new byte[length];
-
-					while (read < length) {
-						int n = is.read(data, read, length - read); // Blocking
-						if (n == -1)
-							throw new IOException("Corrupted data.");
-						read += n;
-					}
-					monitor.newPackage(data, cameraNbr);
 				}
 
 			} catch (SocketException e) {
 				try {
 					s.close();
 					destroyWriter();
-					connect();
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();

@@ -6,7 +6,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class TCPIPBuilder extends Thread { // RENAME!!
-	private ServerSocket serverSocket;
 	private OutputStream os;
 	private Socket socket;
 	private ServerMonitor monitor;
@@ -25,7 +24,6 @@ public class TCPIPBuilder extends Thread { // RENAME!!
 			}
 			socket = s;
 			this.monitor = monitor;
-			serverSocket = monitor.getServerSocket();
 		}
 
 		public void run() {

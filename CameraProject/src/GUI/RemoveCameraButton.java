@@ -13,6 +13,11 @@ public class RemoveCameraButton extends JMenuItem implements ActionListener {
 
 	private GUI gui;
 
+	/**
+	 * Creates a listener for the remove camera button in the GUI
+	 * @param gui The GUI
+	 * @param m The ClientMonitor
+	 */
 	public RemoveCameraButton(GUI gui, ClientMonitor m) {
 		addActionListener(this);
 		this.gui = gui;

@@ -7,8 +7,6 @@ public class CameraReader extends Thread {
 	private AxisM3006V myCamera;
 	private String camera;
 	private int port;
-	private final byte DELIMITER = (byte) '\n';
-	private final byte ENDBYTE = (byte) '\r';
 
 	/**
 	 * Creates a new CameraReader object
@@ -17,11 +15,11 @@ public class CameraReader extends Thread {
 	 * @param camera The ip address or hostname of the camera 
 	 * @param portString The listening port for the camera server
 	 */
-	public CameraReader(ServerMonitor m, String cameraAddress, String portString) {
+	public CameraReader(ServerMonitor m, String cameraAddress, int portString) {
 		super();
 		this.m = m;
 		this.camera=cameraAddress;
-		this.port = Integer.parseInt(portString);
+		this.port = portString;
 		myCamera = new AxisM3006V();
 
 	}

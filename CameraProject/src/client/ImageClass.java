@@ -1,5 +1,11 @@
 package client;
 
+
+
+/**
+ * Representation of an image with image data, travel times and what time to be pulled from the buffer.
+ *
+ */
 public class ImageClass {
 	private byte[] image;
 	private long travelTime, showTime;

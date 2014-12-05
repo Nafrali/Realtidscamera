@@ -17,6 +17,11 @@ public class CameraModeRadioButtonPane extends JPanel implements ActionListener 
 	private ClientMonitor m;
 	private JRadioButton movieButton, idleButton, autoButton;
 
+	/**
+	 * Creates a pane with buttons to change the different camera modes
+	 * @param gui A GUI object
+	 * @param m A ClientMonitor object
+	 */
 	public CameraModeRadioButtonPane(GUI gui, ClientMonitor m) {
 		super();
 		this.gui = gui;

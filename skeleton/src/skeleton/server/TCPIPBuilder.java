@@ -17,7 +17,7 @@ public class TCPIPBuilder extends Thread { // RENAME!!
 		try {
 			this.os = s.getOutputStream();
 		} catch (IOException e) {
-			System.out.println("Fel i TCPIPBuilder");;
+			System.out.println("TCPIPBuilder error, no output stream found.");;
 		}
 		socket = s;
 		this.monitor = monitor;

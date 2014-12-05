@@ -44,31 +44,31 @@ public class ServerSocketHandler extends Thread {
 			} catch (IOException e) {
 				System.out.println("serverSocketHandler error");
 			}
-			
+
 			while (!socket.isClosed()) {
 				byte[] data = new byte[1];
 				try {
 					InputStream is = socket.getInputStream();
 					int n = is.read(data);
 					if (data[0] == 1) {
+						monitor.forceIdle(false);
 						monitor.setMovieMode(true);
 					} else if (n == -1) {
 						destroyBuilder();
 						socket.close();
 					} else if (data[0] == 2) {
-						monitor.forceIdle(true);				}
-					else if(data[0]==3){
+						monitor.forceIdle(true);
+					} else if (data[0] == 3) {
 						monitor.forceIdle(false);
-					}
-					else
+					} else
 						monitor.setMovieMode(false);
-					
+
 				} catch (SocketException e) {
-					System.out.println("Client disconnected");					
+					System.out.println("Client disconnected");
 					try {
 						socket.close();
 						if (socket.isClosed())
-						destroyBuilder();
+							destroyBuilder();
 					} catch (IOException e1) {
 						System.out.println("serverSocketHandler error");
 					}

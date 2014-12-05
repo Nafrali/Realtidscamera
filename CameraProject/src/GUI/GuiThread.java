@@ -4,6 +4,10 @@ import client.ClientMonitor;
 import client.Constants;
 import client.ImageClass;
 
+/**
+ * Handles uppdating of images stored in the monitor. Grabs images from the monitor as soon as a new image is available, 
+ * then tells the GUI to draw it.
+ */
 public class GuiThread extends Thread {
 
 	private ClientMonitor m;
@@ -35,8 +39,7 @@ public class GuiThread extends Thread {
 					if (sleepTime > 0)
 						sleep(sleepTime);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					System.out.println("Lel");
 				}
 			} else if (firstTimeAsynch) {
 				gui.uncheckSynch();

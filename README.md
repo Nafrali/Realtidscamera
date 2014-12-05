@@ -3,11 +3,13 @@ Realtidscamera
 Detta är vårt Realtidskamera system.
 
 UserManual:
+
 1. För att lägga till en kamera välj från dropdown menyn "Menu" alternativet "Add camera".
 2. Skriv in de efterfrågade uppgifterna från "Add camera" valet.
 3. För att ta bort en kamera. Välj i samma meny "Remove Camera" och skriv in nummret på kameran som ska tas bort.
 
 Installation:
+
 1. Start av proxykamera enl. EDA040 hemsidas anvisningar.\n
 2. Starta terminalen.
 3. Navigera till mappen bin som innehåller de körbara .jar filerna.

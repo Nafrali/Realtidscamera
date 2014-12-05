@@ -9,6 +9,9 @@ public class ServerWriter extends Thread {
 	private ClientMonitor monitor;
 	private int lastMode = 234;
 
+	/**
+	 * Sends the current mode of the system to the server if a new mode is detected.
+	 */
 	public ServerWriter(ClientMonitor m, Socket socket) {
 		super();
 		// B�rjar i movie
@@ -20,7 +23,8 @@ public class ServerWriter extends Thread {
 			System.out.println("ServerWriter creation error, no output stream available.");
 		}
 	}
-
+	
+	//
 	public void run() {
 		while (!s.isClosed()) {
 			try {

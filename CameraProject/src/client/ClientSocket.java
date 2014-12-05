@@ -6,6 +6,10 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
+/**
+ * Handles all communication with the server side of the project.
+ *
+ */
 public class ClientSocket extends Thread {
 	private ClientMonitor monitor;
 	private String address;
@@ -113,13 +117,11 @@ public class ClientSocket extends Thread {
 					s.close();
 					destroyWriter();
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					System.out.println("Kunde inte stänga socketen");
 				}
 
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.out.println("Kunde inte stänga socketen");
 			}
 
 		}

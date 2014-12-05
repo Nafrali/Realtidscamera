@@ -10,6 +10,10 @@ class ImagePanel extends JPanel {
 	private JLabel text;
 	private int camNbr;
 
+	/**
+	 * Creates an area in the GUI for one image
+	 * @param camNbr The number of the applied camera 
+	 */
 	public ImagePanel(int camNbr) {
 		super();
 		this.camNbr = camNbr;
@@ -21,6 +25,12 @@ class ImagePanel extends JPanel {
 		this.setSize(200, 200);
 	}
 
+	/**
+	 * Refreshes the image
+	 * @param data The image byte array
+	 * @param nettraveltime The send time for the image
+	 * @param modeChange Displays if the camera has triggered movie mode
+	 */
 	public void refresh(byte[] data, long nettraveltime, String modeChange) {
 		text.setText("Camera " + (camNbr + 1) + ". Network travel time: "
 				+ nettraveltime + "ms" + "   " + modeChange);

@@ -1,14 +1,7 @@
 package client;
 
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
-import java.awt.image.WritableRaster;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
-
-import javax.imageio.ImageIO;
 
 public class ClientMonitor {
 
@@ -61,7 +54,7 @@ public class ClientMonitor {
 		long showTime = System.currentTimeMillis()
 				+ (Constants.DELAY_MODIFIER - travelTime);
 
-		// villkoret för att gå ur synchronized, dvs negativ väntetid
+		// villkoret för att gå ur synchronized, dvs negativ väntetid (-1)
 		if (travelTime > Constants.DELAY_MODIFIER)
 			synch = false;
 
@@ -72,8 +65,6 @@ public class ClientMonitor {
 			buffer.get(cameraNbr).add(
 					new ImageClass(image, travelTime, Constants.NO_SYNCH));
 		}
-		// imageClassArray[cameraNbr] = new ImageClass(image,
-		// networkTravelTime(timestamp));
 		notifyAll();
 
 	}
@@ -89,8 +80,6 @@ public class ClientMonitor {
 	}
 
 	public synchronized ImageClass getLatestImage(int cameraID) {
-		// Just nu kan den bara hämta till kamera 0
-
 		while (buffer.get(cameraID).isEmpty()) {
 			try {
 				wait();
@@ -98,19 +87,7 @@ public class ClientMonitor {
 				System.out.println(("getLatestImage failure"));
 			}
 		}
-		// return imageClassArray[cameraID];
 		return buffer.get(cameraID).pop();
-
-		// Har att göra med buffert! Ta ej bort! // Munkenyo
-		// while (!newPicture) {
-		// try {
-		// wait();
-		// } catch (InterruptedException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-		// }
-		// return currentImage[lastImageNbr];
 	}
 	
 	public synchronized void uppdateMovieMode(boolean movie) {

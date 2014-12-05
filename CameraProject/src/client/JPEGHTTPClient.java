@@ -1,14 +1,21 @@
 package client;
 
-import java.io.*;
-import java.net.*;
+import java.awt.BorderLayout;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.Socket;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.*;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
-import se.lth.cs.eda040.fakecamera.*; // To gain access to maximum image size
+import se.lth.cs.eda040.fakecamera.AxisM3006V; // To gain access to maximum image size
 
 public class JPEGHTTPClient {
 

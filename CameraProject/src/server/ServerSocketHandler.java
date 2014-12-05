@@ -63,6 +63,9 @@ public class ServerSocketHandler extends Thread {
 					else if(data[0]==3){
 						monitor.forceIdle(false);
 					}
+					else if(data[0]==4){
+						monitor.setMovieMode(true);
+					}
 					else
 						monitor.setMovieMode(false);
 					

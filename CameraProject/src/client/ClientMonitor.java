@@ -31,6 +31,9 @@ public class ClientMonitor {
 
 	public synchronized int initMovieMode() throws InterruptedException {
 		wait();
+		if(mode==Constants.AUTO){
+			return(systemMovie ? 4:3);
+		}
 		return mode;
 	}
 

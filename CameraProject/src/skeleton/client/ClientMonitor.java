@@ -110,6 +110,8 @@ public class ClientMonitor {
 		// return currentImage[lastImageNbr];
 	}
 
+	public synchronized void 
+	
 	public synchronized void uppdateMovieMode(boolean movie) {
 		systemMovie = movie;
 		notifyAll();

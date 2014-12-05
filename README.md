@@ -8,7 +8,7 @@ UserManual:
 3. För att ta bort en kamera. Välj i samma meny "Remove Camera" och skriv in nummret på kameran som ska tas bort.
 
 Installation:
-1. Start av proxykamera enl. EDA040 hemsidas anvisningar.
+1. Start av proxykamera enl. EDA040 hemsidas anvisningar.\n
 2. Starta terminalen.
 3. Navigera till mappen bin som innehåller de körbara .jar filerna.
 4. Starta de båda jarfilerna i valfri ordning

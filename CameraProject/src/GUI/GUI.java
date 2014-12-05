@@ -178,6 +178,5 @@ public class GUI extends JFrame implements ItemListener {
 		imagePanels.add(newCam);
 		camDisplay.remove(camList.size() - 1);
 		camDisplay.add(newCam, camList.size() - 1);
-
 	}
 }

@@ -46,7 +46,8 @@ public class ClientMonitor {
 		System.arraycopy(currentPackage, 1, timestamp, 0, 8);
 		System.arraycopy(currentPackage, 9, image, 0, currentPackage.length - 9);
 
-		if (motion[0] == 1 && mode != 2 && !systemMovie) {
+		if (motion[0] == 1 && mode != Constants.IDLE && !systemMovie) {
+			System.out.println("Trigger cam: " + triggerCam + " CameraNbr: " + cameraNbr);
 			triggerCam = cameraNbr;
 			systemMovie = true;
 		}

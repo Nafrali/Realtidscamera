@@ -40,6 +40,10 @@ public class GUI extends JFrame implements ItemListener {
 	public static final int MAXCAMERAS = 2;
 	private String modeChange = "";
 
+	/**
+	 * Creates a GUI object and renders an interface
+	 * @param m A ClientMonitor object that will be used by the GUI
+	 */
 	public GUI(ClientMonitor m) {
 		super();
 		this.m = m;
@@ -81,21 +85,28 @@ public class GUI extends JFrame implements ItemListener {
 		setResizable(false);
 	}
 
-	public void refreshImage(byte[] newPicture, boolean movieMode, int imgNbr,
+	/**
+	 * Updates an image
+	 * @param newPicture The new image
+	 * @param movieMode If the system is in movie mode or not
+	 * @param cameraNbr The id of the camera
+	 * @param traveltime The network delay for the image
+	 */
+	public void refreshImage(byte[] newPicture, boolean movieMode, int cameraNbr,
 			long traveltime) {
 		jpeg = newPicture;
 		try {
-			if (m.triggeredBy() == imgNbr) {
+			if (m.triggeredBy() == cameraNbr) {
 				modeChange = "Triggered movie mode!";
 			}
-			imagePanels.get(imgNbr).refresh(jpeg, traveltime, modeChange);
+			imagePanels.get(cameraNbr).refresh(jpeg, traveltime, modeChange);
 			modeChange = "";
 			if (movieMode)
 				systemMode.setText("System in movie mode");
 			else
 				systemMode.setText("System in idle mode");
 		} catch (Exception e) {
-			addToLog("Could not refresh image: " + imgNbr
+			addToLog("Could not refresh image: " + cameraNbr
 					+ ". Camera not connected.");
 		}
 	}
@@ -109,6 +120,9 @@ public class GUI extends JFrame implements ItemListener {
 
 	}
 
+	/**
+	 * Creates a menu and adds it to the GUI
+	 */
 	private void addMenu() {
 		JMenuBar menuBar = new JMenuBar();
 		JMenu menu = new JMenu("Menu");
@@ -128,25 +142,46 @@ public class GUI extends JFrame implements ItemListener {
 		synch.addItemListener(this);
 	}
 
+	/**
+	 * Appends text to the log area
+	 * @param string The string to be appended
+	 */
 	public void addToLog(String string) {
 		actionLogArea.append(string + "\n");
 
 	}
 
+	/**
+	 * Removes a camera from and replaces the old camera image with a waiting image.
+	 * @param camNbr The the camera that has been removed. 
+	 */
 	public void setWaitImage(int camNbr) {
 		camDisplay.remove(camNbr);
 		camDisplay.add(new JLabel(new ImageIcon(waitingforconnect)), camNbr);
 	}
 
+	/**
+	 * Set synchronized to false
+	 */
 	public void uncheckSynch() {
 		synch.setSelected(false);
 		addToLog("Network travel time too long, synchronous mode deactivated");
 	}
 
+	/**
+	 * Gets a thread from the thread list
+	 * @param i The index of the thread wanted
+	 * @return returns the wanted thread.
+	 */
 	public Thread getThread(int i) {
 		return threadList.get(i);
 	}
 
+	/**
+	 * Adds a camera and connects it to a server
+	 * @param host The ip address or hostname of the server
+	 * @param port The port that the server is using
+	 */
 	public void addCamera(String host, int port) {
 		setWaitImage(camList.size());
 		GuiThread newThread = new GuiThread(m, this, camList.size());
@@ -157,6 +192,10 @@ public class GUI extends JFrame implements ItemListener {
 		newThread.start();
 	}
 
+	/**
+	 * Removes a camera
+	 * @param camNbr The camera number that is to be removed
+	 */
 	public void removeCamera(int camNbr) {
 		try {
 			threadList.get(camNbr).killThread();
@@ -173,6 +212,9 @@ public class GUI extends JFrame implements ItemListener {
 
 	}
 
+	/**
+	 * To be commented
+	 */
 	public void showCamera() {
 		ImagePanel newCam = new ImagePanel(camList.size() - 1);
 		imagePanels.add(newCam);

@@ -8,7 +8,7 @@ import java.net.UnknownHostException;
 
 /**
  * Handles all communication with the server side of the project.
- *
+ * 
  */
 public class ClientSocket extends Thread {
 	private ClientMonitor monitor;
@@ -117,11 +117,11 @@ public class ClientSocket extends Thread {
 					s.close();
 					destroyWriter();
 				} catch (IOException e1) {
-					System.out.println("Kunde inte stänga socketen");
+					System.out.println("Failed to close socket connection.");
 				}
 
 			} catch (IOException e) {
-				System.out.println("Kunde inte stänga socketen");
+				System.out.println("Failed to close socket connection.");
 			}
 
 		}

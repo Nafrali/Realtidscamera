@@ -18,10 +18,14 @@ public class AddCameraButton extends JMenuItem implements ActionListener {
 	private GUI gui;
 
 	/**
-	 * Creates a camera button 
-	 * @param gui A GUI object
-	 * @param m A ServerMonitor object
-	 * @param camList A list with ClientSocket
+	 * Creates a camera button
+	 * 
+	 * @param gui
+	 *            A GUI object
+	 * @param m
+	 *            A ServerMonitor object
+	 * @param camList
+	 *            A list with ClientSocket
 	 */
 	public AddCameraButton(GUI gui, ClientMonitor m,
 			ArrayList<ClientSocket> camList) {
@@ -45,6 +49,7 @@ public class AddCameraButton extends JMenuItem implements ActionListener {
 			int port = 0;
 			try {
 				port = Integer.parseInt(stringPort);
+				gui.setWaitImage(camList.size());
 				gui.addToLog("Trying to connect to camera @" + host + ":"
 						+ port + "...");
 				gui.addCamera(host, port);

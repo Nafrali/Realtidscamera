@@ -42,7 +42,9 @@ public class GUI extends JFrame implements ItemListener {
 
 	/**
 	 * Creates a GUI object and renders an interface
-	 * @param m A ClientMonitor object that will be used by the GUI
+	 * 
+	 * @param m
+	 *            A ClientMonitor object that will be used by the GUI
 	 */
 	public GUI(ClientMonitor m) {
 		super();
@@ -87,20 +89,29 @@ public class GUI extends JFrame implements ItemListener {
 
 	/**
 	 * Updates an image
-	 * @param newPicture The new image
-	 * @param movieMode If the system is in movie mode or not
-	 * @param cameraNbr The id of the camera
-	 * @param traveltime The network delay for the image
+	 * 
+	 * @param newPicture
+	 *            The new image
+	 * @param movieMode
+	 *            If the system is in movie mode or not
+	 * @param cameraNbr
+	 *            The id of the camera
+	 * @param traveltime
+	 *            The network delay for the image
 	 */
-	public void refreshImage(byte[] newPicture, boolean movieMode, int cameraNbr,
-			long traveltime) {
+	public void refreshImage(byte[] newPicture, boolean movieMode,
+			int cameraNbr, long traveltime) {
 		jpeg = newPicture;
 		try {
 			if (m.triggeredBy() == cameraNbr) {
 				modeChange = "Triggered movie mode!";
+				imagePanels.get(cameraNbr)
+						.refresh(jpeg, traveltime, modeChange);
+				modeChange = "";
+			} else {
+				imagePanels.get(cameraNbr)
+						.refresh(jpeg, traveltime, modeChange);
 			}
-			imagePanels.get(cameraNbr).refresh(jpeg, traveltime, modeChange);
-			modeChange = "";
 			if (movieMode)
 				systemMode.setText("System in movie mode");
 			else
@@ -144,7 +155,9 @@ public class GUI extends JFrame implements ItemListener {
 
 	/**
 	 * Appends text to the log area
-	 * @param string The string to be appended
+	 * 
+	 * @param string
+	 *            The string to be appended
 	 */
 	public void addToLog(String string) {
 		actionLogArea.append(string + "\n");
@@ -152,8 +165,11 @@ public class GUI extends JFrame implements ItemListener {
 	}
 
 	/**
-	 * Removes a camera from and replaces the old camera image with a waiting image.
-	 * @param camNbr The the camera that has been removed. 
+	 * Removes a camera from and replaces the old camera image with a waiting
+	 * image.
+	 * 
+	 * @param camNbr
+	 *            The the camera that has been removed.
 	 */
 	public void setWaitImage(int camNbr) {
 		camDisplay.remove(camNbr);
@@ -170,7 +186,9 @@ public class GUI extends JFrame implements ItemListener {
 
 	/**
 	 * Gets a thread from the thread list
-	 * @param i The index of the thread wanted
+	 * 
+	 * @param i
+	 *            The index of the thread wanted
 	 * @return returns the wanted thread.
 	 */
 	public Thread getThread(int i) {
@@ -179,11 +197,13 @@ public class GUI extends JFrame implements ItemListener {
 
 	/**
 	 * Adds a camera and connects it to a server
-	 * @param host The ip address or hostname of the server
-	 * @param port The port that the server is using
+	 * 
+	 * @param host
+	 *            The ip address or hostname of the server
+	 * @param port
+	 *            The port that the server is using
 	 */
 	public void addCamera(String host, int port) {
-		setWaitImage(camList.size());
 		GuiThread newThread = new GuiThread(m, this, camList.size());
 		ClientSocket newSocket = new ClientSocket(m, host, port, camList.size());
 		threadList.add(newThread);
@@ -194,7 +214,9 @@ public class GUI extends JFrame implements ItemListener {
 
 	/**
 	 * Removes a camera
-	 * @param camNbr The camera number that is to be removed
+	 * 
+	 * @param camNbr
+	 *            The camera number that is to be removed
 	 */
 	public void removeCamera(int camNbr) {
 		try {

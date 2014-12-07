@@ -99,7 +99,7 @@ public class GUI extends JFrame implements ItemListener {
 	 * @param traveltime
 	 *            The network delay for the image
 	 */
-	public void refreshImage(byte[] newPicture, boolean movieMode,
+	public synchronized void refreshImage(byte[] newPicture, boolean movieMode,
 			int cameraNbr, long traveltime) {
 		jpeg = newPicture;
 		try {
@@ -139,9 +139,9 @@ public class GUI extends JFrame implements ItemListener {
 		JMenu menu = new JMenu("Menu");
 		menu.setMnemonic(KeyEvent.VK_A);
 		JMenuItem addCam = new AddCameraButton(this, m, camList);
-		JMenuItem remCam = new RemoveCameraButton(this, m);
+//		JMenuItem remCam = new RemoveCameraButton(this, m);
 		menu.add(addCam);
-		menu.add(remCam);
+//		menu.add(remCam);
 		menuBar.add(menu);
 		add(menuBar, BorderLayout.NORTH);
 	}

@@ -5,8 +5,8 @@ import client.Constants;
 import client.ImageClass;
 
 /**
- * Handles uppdating of images stored in the monitor. Grabs images from the monitor as soon as a new image is available, 
- * then tells the GUI to draw it.
+ * Handles uppdating of images stored in the monitor. Grabs images from the
+ * monitor as soon as a new image is available, then tells the GUI to draw it.
  */
 public class GuiThread extends Thread {
 
@@ -48,7 +48,7 @@ public class GuiThread extends Thread {
 			gui.refreshImage(currentImage.getImage(), m.systemInMovie(),
 					threadID, currentImage.getTravelTime());
 			if (firsttimerun) {
-				gui.showCamera();
+				gui.showCamera(threadID);
 				gui.addToLog("Connection established.");
 				firsttimerun = false;
 			}

@@ -15,8 +15,11 @@ public class RemoveCameraButton extends JMenuItem implements ActionListener {
 
 	/**
 	 * Creates a listener for the remove camera button in the GUI
-	 * @param gui The GUI
-	 * @param m The ClientMonitor
+	 * 
+	 * @param gui
+	 *            The GUI
+	 * @param m
+	 *            The ClientMonitor
 	 */
 	public RemoveCameraButton(GUI gui, ClientMonitor m) {
 		addActionListener(this);
@@ -33,6 +36,7 @@ public class RemoveCameraButton extends JMenuItem implements ActionListener {
 		}
 		int camNbr = Integer.parseInt(id);
 		try {
+			gui.setNoCamFeedImage(camNbr - 1);
 			gui.removeCamera(camNbr - 1);
 			gui.addToLog("Camera " + camNbr + " has been removed.");
 		} catch (Exception e) {

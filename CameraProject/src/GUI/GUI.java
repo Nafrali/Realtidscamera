@@ -28,7 +28,7 @@ public class GUI extends JFrame implements ItemListener {
 
 	private ClientMonitor m;
 	private ArrayList<ClientSocket> camList;
-	private ArrayList<ImagePanel> imagePanels;
+	private ImagePanel[] imagePanels;
 	private ArrayList<GuiThread> threadList;
 	private JPanel displayPanel;
 	private BufferedImage nocamfeed, waitingforconnect;
@@ -51,7 +51,7 @@ public class GUI extends JFrame implements ItemListener {
 		this.m = m;
 		getContentPane().setLayout(new BorderLayout());
 		camList = new ArrayList<ClientSocket>();
-		imagePanels = new ArrayList<ImagePanel>();
+		imagePanels = new ImagePanel[MAXCAMERAS];
 		threadList = new ArrayList<GuiThread>();
 		addSyncCheckbox();
 		addMenu();
@@ -63,16 +63,13 @@ public class GUI extends JFrame implements ItemListener {
 		JPanel modeSelectionPanel = new JPanel();
 		displayPanel.setLayout(new GridLayout(0, 2));
 		modeSelectionPanel.setLayout(new BorderLayout());
-		modeSelectionPanel.add(new CameraModePane(this, m),
-				BorderLayout.WEST);
+		modeSelectionPanel.add(new CameraModePane(this, m), BorderLayout.WEST);
 		modeSelectionPanel.add(synch, BorderLayout.EAST);
 		modeSelectionPanel.add(systemMode, BorderLayout.NORTH);
 		displayPanel.add(actionLogArea);
 		displayPanel.add(modeSelectionPanel);
 		try {
 			nocamfeed = ImageIO.read(new File("../files/nocamfeed.jpg"));
-			waitingforconnect = ImageIO
-					.read(new File("../files/waitforcon.jpg"));
 			for (int i = 0; i < 2; i++)
 				camDisplay.add(new JLabel(new ImageIcon(nocamfeed)));
 		} catch (IOException ex) {
@@ -105,12 +102,10 @@ public class GUI extends JFrame implements ItemListener {
 		try {
 			if (m.triggeredBy() == cameraNbr) {
 				modeChange = "Triggered movie mode!";
-				imagePanels.get(cameraNbr)
-						.refresh(jpeg, traveltime, modeChange);
+				imagePanels[cameraNbr].refresh(jpeg, traveltime, modeChange);
 				modeChange = "";
 			} else {
-				imagePanels.get(cameraNbr)
-						.refresh(jpeg, traveltime, modeChange);
+				imagePanels[cameraNbr].refresh(jpeg, traveltime, modeChange);
 			}
 			if (movieMode)
 				systemMode.setText("System in movie mode");
@@ -139,9 +134,9 @@ public class GUI extends JFrame implements ItemListener {
 		JMenu menu = new JMenu("Menu");
 		menu.setMnemonic(KeyEvent.VK_A);
 		JMenuItem addCam = new AddCameraButton(this, m, camList);
-//		JMenuItem remCam = new RemoveCameraButton(this, m);
+		JMenuItem remCam = new RemoveCameraButton(this, m);
 		menu.add(addCam);
-//		menu.add(remCam);
+		menu.add(remCam);
 		menuBar.add(menu);
 		add(menuBar, BorderLayout.NORTH);
 	}
@@ -161,19 +156,44 @@ public class GUI extends JFrame implements ItemListener {
 	 */
 	public void addToLog(String string) {
 		actionLogArea.append(string + "\n");
-
 	}
 
 	/**
-	 * Removes a camera from and replaces the old camera image with a waiting
-	 * image.
+	 * Replaces the old image with a waiting image.
 	 * 
 	 * @param camNbr
 	 *            The the camera that has been removed.
 	 */
 	public void setWaitImage(int camNbr) {
-		camDisplay.remove(camNbr);
-		camDisplay.add(new JLabel(new ImageIcon(waitingforconnect)), camNbr);
+		try {
+			waitingforconnect = ImageIO
+					.read(new File("../files/waitforcon.jpg"));
+			camDisplay.remove(camNbr);
+			camDisplay
+					.add(new JLabel(new ImageIcon(waitingforconnect)), camNbr);
+			pack();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Replaces the old image with a no cam image.
+	 * 
+	 * @param camNbr
+	 *            The the camera that has been removed.
+	 */
+	public void setNoCamFeedImage(int camNbr) {
+		try {
+			nocamfeed = ImageIO.read(new File("../files/nocamfeed.jpg"));
+			camDisplay.remove(camNbr);
+			camDisplay.add(new JLabel(new ImageIcon(nocamfeed)), camNbr);
+			pack();
+		} catch (IOException ex) {
+			System.out.println("\"No camera feed\" image not found.");
+		} catch (IndexOutOfBoundsException e) {
+			System.out.println("No component at index " + camNbr);
+		}
 	}
 
 	/**
@@ -208,6 +228,7 @@ public class GUI extends JFrame implements ItemListener {
 	 *            The camera number that is to be removed
 	 */
 	public void removeCamera(int camNbr) {
+		setNoCamFeedImage(camNbr);
 		try {
 			threadList.get(camNbr).killThread();
 			threadList.get(camNbr).join();
@@ -218,18 +239,17 @@ public class GUI extends JFrame implements ItemListener {
 		}
 		threadList.remove(camNbr);
 		camList.remove(camNbr);
-		camDisplay.remove(camNbr);
-		camDisplay.add(new JLabel(new ImageIcon(nocamfeed)), camNbr);
-
+		imagePanels[camNbr] = null;
 	}
 
 	/**
 	 * To be commented
 	 */
-	public void showCamera() {
-		ImagePanel newCam = new ImagePanel(camList.size() - 1);
-		imagePanels.add(newCam);
-		camDisplay.remove(camList.size() - 1);
-		camDisplay.add(newCam, camList.size() - 1);
+	public void showCamera(int camNbr) {
+		ImagePanel newCam = new ImagePanel(camNbr);
+		imagePanels[camNbr] = newCam;
+		camDisplay.remove(camNbr);
+		camDisplay.add(newCam, camNbr);
+		pack();
 	}
 }

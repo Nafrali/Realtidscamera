@@ -1,6 +1,9 @@
 package GUI;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.GridLayout;
+
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -17,11 +20,13 @@ class ImagePanel extends JPanel {
 	public ImagePanel(int camNbr) {
 		super();
 		this.camNbr = camNbr;
+		setLayout(new BorderLayout());
 		picture = new JLabel(new ImageIcon());
 		text = new JLabel("Camera " + (camNbr + 1)
 				+ ". Network travel time: 0ms");
+		text.setForeground(Color.RED);
 		add(text, BorderLayout.SOUTH);
-		add(picture, BorderLayout.CENTER);
+		add(picture, BorderLayout.NORTH);
 		this.setSize(200, 200);
 	}
 

@@ -11,7 +11,7 @@ import javax.swing.JRadioButton;
 import client.ClientMonitor;
 import client.Constants;
 
-public class CameraModeRadioButtonPane extends JPanel implements ActionListener {
+public class CameraModePane extends JPanel implements ActionListener {
 
 	private GUI gui;
 	private ClientMonitor m;
@@ -22,7 +22,7 @@ public class CameraModeRadioButtonPane extends JPanel implements ActionListener 
 	 * @param gui A GUI object
 	 * @param m A ClientMonitor object
 	 */
-	public CameraModeRadioButtonPane(GUI gui, ClientMonitor m) {
+	public CameraModePane(GUI gui, ClientMonitor m) {
 		super();
 		this.gui = gui;
 		this.m = m;

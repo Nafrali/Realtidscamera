@@ -63,7 +63,7 @@ public class GUI extends JFrame implements ItemListener {
 		JPanel modeSelectionPanel = new JPanel();
 		displayPanel.setLayout(new GridLayout(0, 2));
 		modeSelectionPanel.setLayout(new BorderLayout());
-		modeSelectionPanel.add(new CameraModeRadioButtonPane(this, m),
+		modeSelectionPanel.add(new CameraModePane(this, m),
 				BorderLayout.WEST);
 		modeSelectionPanel.add(synch, BorderLayout.EAST);
 		modeSelectionPanel.add(systemMode, BorderLayout.NORTH);
@@ -182,17 +182,6 @@ public class GUI extends JFrame implements ItemListener {
 	public void uncheckSynch() {
 		synch.setSelected(false);
 		addToLog("Network travel time too long, synchronous mode deactivated");
-	}
-
-	/**
-	 * Gets a thread from the thread list
-	 * 
-	 * @param i
-	 *            The index of the thread wanted
-	 * @return returns the wanted thread.
-	 */
-	public Thread getThread(int i) {
-		return threadList.get(i);
 	}
 
 	/**

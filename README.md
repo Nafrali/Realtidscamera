@@ -15,6 +15,8 @@ Installation:
 3. Navigera till mappen bin som innehåller de körbara .jar filerna.
 4. Starta de båda jarfilerna i valfri ordning
 (lägg märke till att det behövs en server.jar körandes för varje kamera)
+Servern startas genom "java -jar Server.jar client port camera address server port".
+Öppna ny terminalfönster starta clienten genom "java -jar Client.jar".
 5. Server.jar:  
 Starta server.jar genom "java -jar server.jar args[0] args[1] args[2]"
 i terminalen. Där args[0] är serverporten, args[1] är kameraaddressen,

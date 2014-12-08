@@ -34,13 +34,15 @@ public class RemoveCameraButton extends JMenuItem implements ActionListener {
 		if (id == null) {
 			return;
 		}
-		int camNbr = Integer.parseInt(id);
 		try {
+			int camNbr = Integer.parseInt(id);
 			gui.setNoCamFeedImage(camNbr - 1);
 			gui.removeCamera(camNbr - 1);
 			gui.addToLog("Camera " + camNbr + " has been removed.");
+		} catch (NumberFormatException e) {
+			gui.addToLog(id + " could not be resolved to a digit.");
 		} catch (Exception e) {
-			gui.addToLog("Camera " + camNbr + " does not exist.");
+			gui.addToLog("Camera " + id + " does not exist.");
 		}
 
 	}

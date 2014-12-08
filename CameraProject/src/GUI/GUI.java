@@ -39,6 +39,7 @@ public class GUI extends JFrame implements ItemListener {
 	private byte[] jpeg = new byte[AxisM3006V.IMAGE_BUFFER_SIZE];
 	public static final int MAXCAMERAS = 2;
 	private String modeChange = "";
+	private int nextFreeSlot = 0;
 
 	/**
 	 * Creates a GUI object and renders an interface
@@ -111,9 +112,9 @@ public class GUI extends JFrame implements ItemListener {
 				systemMode.setText("System in movie mode");
 			else
 				systemMode.setText("System in idle mode");
-		} catch (Exception e) {
+		} catch (NullPointerException e) {
 			addToLog("Could not refresh image: " + cameraNbr
-					+ ". Camera not connected.");
+					+ ". Camera not found.");
 		}
 	}
 
@@ -133,7 +134,7 @@ public class GUI extends JFrame implements ItemListener {
 		JMenuBar menuBar = new JMenuBar();
 		JMenu menu = new JMenu("Menu");
 		menu.setMnemonic(KeyEvent.VK_A);
-		JMenuItem addCam = new AddCameraButton(this, m, camList);
+		JMenuItem addCam = new AddCameraButton(this, camList);
 		JMenuItem remCam = new RemoveCameraButton(this, m);
 		menu.add(addCam);
 		menu.add(remCam);
@@ -201,7 +202,7 @@ public class GUI extends JFrame implements ItemListener {
 	 */
 	public void uncheckSynch() {
 		synch.setSelected(false);
-		addToLog("Network travel time too long, synchronous mode deactivated");
+		addToLog("Synchronous mode deactivated");
 	}
 
 	/**
@@ -213,12 +214,14 @@ public class GUI extends JFrame implements ItemListener {
 	 *            The port that the server is using
 	 */
 	public void addCamera(String host, int port) {
-		GuiThread newThread = new GuiThread(m, this, camList.size());
-		ClientSocket newSocket = new ClientSocket(m, host, port, camList.size());
-		threadList.add(newThread);
-		camList.add(newSocket);
+		setWaitImage(nextFreeSlot);
+		GuiThread newThread = new GuiThread(m, this, nextFreeSlot);
+		ClientSocket newSocket = new ClientSocket(m, host, port, nextFreeSlot);
+		threadList.add(nextFreeSlot, newThread);
+		camList.add(nextFreeSlot, newSocket);
 		newSocket.start();
 		newThread.start();
+		nextFreeSlot = (nextFreeSlot + 1) % MAXCAMERAS;
 	}
 
 	/**
@@ -228,7 +231,9 @@ public class GUI extends JFrame implements ItemListener {
 	 *            The camera number that is to be removed
 	 */
 	public void removeCamera(int camNbr) {
+		System.out.println(camNbr);
 		setNoCamFeedImage(camNbr);
+		nextFreeSlot = camNbr;
 		try {
 			threadList.get(camNbr).killThread();
 			threadList.get(camNbr).join();
@@ -239,7 +244,6 @@ public class GUI extends JFrame implements ItemListener {
 		}
 		threadList.remove(camNbr);
 		camList.remove(camNbr);
-		imagePanels[camNbr] = null;
 	}
 
 	/**

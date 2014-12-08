@@ -13,7 +13,6 @@ import client.ClientSocket;
 
 public class AddCameraButton extends JMenuItem implements ActionListener {
 
-	private ClientMonitor m;
 	private ArrayList<ClientSocket> camList;
 	private GUI gui;
 
@@ -27,10 +26,8 @@ public class AddCameraButton extends JMenuItem implements ActionListener {
 	 * @param camList
 	 *            A list with ClientSocket
 	 */
-	public AddCameraButton(GUI gui, ClientMonitor m,
-			ArrayList<ClientSocket> camList) {
+	public AddCameraButton(GUI gui, ArrayList<ClientSocket> camList) {
 		addActionListener(this);
-		this.m = m;
 		this.camList = camList;
 		this.gui = gui;
 		setText("Add camera");
@@ -49,12 +46,15 @@ public class AddCameraButton extends JMenuItem implements ActionListener {
 			int port = 0;
 			try {
 				port = Integer.parseInt(stringPort);
-				gui.setWaitImage(camList.size());
 				gui.addToLog("Trying to connect to camera @" + host + ":"
 						+ port + "...");
 				gui.addCamera(host, port);
 
+			} catch (NumberFormatException nEx) {
+				gui.addToLog(stringPort + " could not be resolved to a digit.");
 			} catch (Exception e1) {
+				gui.addToLog("Failed to add camera @" + host + ":" + port
+						+ "...");
 			}
 		}
 	}

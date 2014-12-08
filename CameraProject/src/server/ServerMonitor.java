@@ -66,7 +66,7 @@ public class ServerMonitor {
 			try {
 				wait();
 			} catch (InterruptedException e) {
-				System.out.println("ServerMonitor error");
+				System.out.println("Connection to server broken");
 			}
 		}
 		socketReadImage = true;

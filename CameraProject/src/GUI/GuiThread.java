@@ -24,12 +24,10 @@ public class GuiThread extends Thread {
 	}
 
 	public synchronized void killThread() {
-		System.out.println("thread with id " +threadID + " has been killed.");
 		run = false;
 	}
 
 	public void run() {
-		System.out.println("thread with id " +threadID + " has been started.");
 		while (run) {
 			currentImage = m.getLatestImage(threadID);
 			if (currentImage.getShowTime() != Constants.NO_SYNCH) {

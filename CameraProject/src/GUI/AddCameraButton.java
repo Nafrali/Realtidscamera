@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 
 import client.ClientMonitor;
 import client.ClientSocket;
+import client.Constants;
 
 public class AddCameraButton extends JMenuItem implements ActionListener {
 
@@ -34,8 +35,8 @@ public class AddCameraButton extends JMenuItem implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		if (camList.size() >= GUI.MAXCAMERAS) {
-			gui.addToLog("Maximum amount of cameras (" + GUI.MAXCAMERAS
+		if (camList.size() >= Constants.MAXCAMERAS) {
+			gui.addToLog("Maximum amount of cameras (" + Constants.MAXCAMERAS
 					+ ") already added.");
 
 		} else {
@@ -52,7 +53,7 @@ public class AddCameraButton extends JMenuItem implements ActionListener {
 
 			} catch (NumberFormatException nEx) {
 				gui.addToLog(stringPort + " could not be resolved to a digit.");
-			} catch (Exception e1) {
+			} catch (NullPointerException e1) {
 				gui.addToLog("Failed to add camera @" + host + ":" + port
 						+ "...");
 			}

@@ -23,6 +23,7 @@ import javax.swing.JPanel;
 import se.lth.cs.eda040.fakecamera.AxisM3006V;
 import client.ClientMonitor;
 import client.ClientSocket;
+import client.Constants;
 
 public class GUI extends JFrame implements ItemListener {
 
@@ -37,7 +38,6 @@ public class GUI extends JFrame implements ItemListener {
 	private JLabel systemMode;
 	private MessageArea actionLogArea = new MessageArea();
 	private byte[] jpeg = new byte[AxisM3006V.IMAGE_BUFFER_SIZE];
-	public static final int MAXCAMERAS = 2;
 	private String modeChange = "";
 	private int nextFreeSlot = 0;
 
@@ -52,7 +52,7 @@ public class GUI extends JFrame implements ItemListener {
 		this.m = m;
 		getContentPane().setLayout(new BorderLayout());
 		camList = new ArrayList<ClientSocket>();
-		imagePanels = new ImagePanel[MAXCAMERAS];
+		imagePanels = new ImagePanel[Constants.MAXCAMERAS];
 		threadList = new ArrayList<GuiThread>();
 		addSyncCheckbox();
 		addMenu();
@@ -62,7 +62,7 @@ public class GUI extends JFrame implements ItemListener {
 		systemMode = new JLabel("System in idle mode.");
 		displayPanel = new JPanel();
 		JPanel modeSelectionPanel = new JPanel();
-		displayPanel.setLayout(new GridLayout(0, 2));
+		displayPanel.setLayout(new GridLayout(0, Constants.MAXCAMERAS));
 		modeSelectionPanel.setLayout(new BorderLayout());
 		modeSelectionPanel.add(new CameraModePane(this, m), BorderLayout.WEST);
 		modeSelectionPanel.add(synch, BorderLayout.EAST);
@@ -71,8 +71,8 @@ public class GUI extends JFrame implements ItemListener {
 		displayPanel.add(modeSelectionPanel);
 		try {
 			nocamfeed = ImageIO.read(new File("../files/nocamfeed.jpg"));
-			for (int i = 0; i < 2; i++)
-				camDisplay.add(new JLabel(new ImageIcon(nocamfeed)));
+			for(int i = 0; i < Constants.MAXCAMERAS; i ++)
+			camDisplay.add(new JLabel(new ImageIcon(nocamfeed)));
 		} catch (IOException ex) {
 			System.out.println("\"No camera feed\" image not found.");
 		}
@@ -135,7 +135,7 @@ public class GUI extends JFrame implements ItemListener {
 		JMenu menu = new JMenu("Menu");
 		menu.setMnemonic(KeyEvent.VK_A);
 		JMenuItem addCam = new AddCameraButton(this, camList);
-		JMenuItem remCam = new RemoveCameraButton(this, m);
+		JMenuItem remCam = new RemoveCameraButton(this);
 		menu.add(addCam);
 		menu.add(remCam);
 		menuBar.add(menu);
@@ -169,7 +169,11 @@ public class GUI extends JFrame implements ItemListener {
 		try {
 			waitingforconnect = ImageIO
 					.read(new File("../files/waitforcon.jpg"));
-			camDisplay.remove(camNbr);
+			try {
+				camDisplay.remove(camNbr);
+			} catch (ArrayIndexOutOfBoundsException e) {
+
+			}
 			camDisplay
 					.add(new JLabel(new ImageIcon(waitingforconnect)), camNbr);
 			pack();
@@ -221,7 +225,7 @@ public class GUI extends JFrame implements ItemListener {
 		camList.add(nextFreeSlot, newSocket);
 		newSocket.start();
 		newThread.start();
-		nextFreeSlot = (nextFreeSlot + 1) % MAXCAMERAS;
+		nextFreeSlot = (nextFreeSlot + 1) % Constants.MAXCAMERAS;
 	}
 
 	/**
@@ -230,8 +234,7 @@ public class GUI extends JFrame implements ItemListener {
 	 * @param camNbr
 	 *            The camera number that is to be removed
 	 */
-	public void removeCamera(int camNbr) {
-		System.out.println(camNbr);
+	public synchronized void removeCamera(int camNbr) {
 		setNoCamFeedImage(camNbr);
 		nextFreeSlot = camNbr;
 		try {

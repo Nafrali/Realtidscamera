@@ -12,7 +12,7 @@ Installation:
 
 1. Start av proxykamera enl. EDA040 hemsidas anvisningar.\n
 2. Starta terminalen.
-3. Navigera till mappen bin som innehåller de körbara .jar filerna.
+3. Navigera till mappen "jars" som innehåller de körbara .jar filerna.
 4. Starta de båda jarfilerna i valfri ordning
 (lägg märke till att det behövs en server.jar körandes för varje kamera)
 Servern startas genom "java -jar Server.jar [client port] [camera address] [server port]".

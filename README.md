@@ -2,7 +2,7 @@ Realtidscamera
 ==============
 Detta är vårt Realtidskamera system.
 
-UserManual:
+Användarmanual:
 
 1. För att lägga till en kamera välj från dropdown menyn "Menu" alternativet "Add camera".
 2. Skriv in de efterfrågade uppgifterna från "Add camera" valet.

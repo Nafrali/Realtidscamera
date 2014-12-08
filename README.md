@@ -2,6 +2,8 @@ Realtidscamera
 ==============
 Detta är vårt Realtidskamera system.
 
+Ladda ner projektet genom att trycka på "zip" i högra hörnet.
+
 Användarmanual:
 
 1. För att lägga till en kamera välj från dropdown menyn "Menu" alternativet "Add camera".

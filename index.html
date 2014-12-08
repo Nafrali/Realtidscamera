@@ -43,7 +43,7 @@
 
 <p>Detta är vårt Realtidskamera system.</p>
 
-<p>UserManual:</p>
+<p>Användarmanual:</p>
 
 <ol>
 <li>För att lägga till en kamera välj från dropdown menyn "Menu" alternativet "Add camera".</li>
@@ -56,9 +56,11 @@
 <ol>
 <li>Start av proxykamera enl. EDA040 hemsidas anvisningar.\n</li>
 <li>Starta terminalen.</li>
-<li>Navigera till mappen bin som innehåller de körbara .jar filerna.</li>
+<li>Navigera till mappen "jars" som innehåller de körbara .jar filerna.</li>
 <li>Starta de båda jarfilerna i valfri ordning
-(lägg märke till att det behövs en server.jar körandes för varje kamera)</li>
+(lägg märke till att det behövs en server.jar körandes för varje kamera)
+Servern startas genom "java -jar Server.jar [client port] [camera address] [server port]".
+Öppna ett nytt terminalfönster och starta clienten genom "java -jar Client.jar".</li>
 <li>Server.jar:<br>
 Starta server.jar genom "java -jar server.jar args[0] args[1] args[2]"
 i terminalen. Där args[0] är serverporten, args[1] är kameraaddressen,

@@ -236,10 +236,12 @@ public class GUI extends JFrame implements ItemListener {
 	 */
 	public synchronized void removeCamera(int camNbr) {
 		setNoCamFeedImage(camNbr);
+		System.out.println(camNbr + " 1 ");
 		nextFreeSlot = camNbr;
+		System.out.println(camNbr + " 2 ");
 		try {
 			threadList.get(camNbr).killThread();
-			threadList.get(camNbr).join();
+			threadList.get(camNbr).interrupt();
 			addToLog(camList.get(camNbr).killSocket());
 			camList.get(camNbr).join();
 		} catch (InterruptedException e) {

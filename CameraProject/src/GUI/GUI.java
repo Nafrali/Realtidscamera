@@ -71,8 +71,8 @@ public class GUI extends JFrame implements ItemListener {
 		displayPanel.add(modeSelectionPanel);
 		try {
 			nocamfeed = ImageIO.read(new File("../files/nocamfeed.jpg"));
-			for(int i = 0; i < Constants.MAXCAMERAS; i ++)
-			camDisplay.add(new JLabel(new ImageIcon(nocamfeed)));
+			for (int i = 0; i < Constants.MAXCAMERAS; i++)
+				camDisplay.add(new JLabel(new ImageIcon(nocamfeed)));
 		} catch (IOException ex) {
 			System.out.println("\"No camera feed\" image not found.");
 		}
@@ -236,11 +236,8 @@ public class GUI extends JFrame implements ItemListener {
 	 */
 	public synchronized void removeCamera(int camNbr) {
 		setNoCamFeedImage(camNbr);
-		System.out.println(camNbr + " 1 ");
 		nextFreeSlot = camNbr;
-		System.out.println(camNbr + " 2 ");
 		try {
-			threadList.get(camNbr).killThread();
 			threadList.get(camNbr).interrupt();
 			addToLog(camList.get(camNbr).killSocket());
 			camList.get(camNbr).join();

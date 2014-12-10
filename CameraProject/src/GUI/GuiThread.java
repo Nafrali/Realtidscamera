@@ -23,12 +23,8 @@ public class GuiThread extends Thread {
 		this.gui = gui;
 	}
 
-	public synchronized void killThread() {
-		run = false;
-	}
-
 	public void run() {
-		while (run) {
+		while (!interrupted()) {
 			currentImage = m.getLatestImage(threadID);
 			if (currentImage.getShowTime() != Constants.NO_SYNCH) {
 				try {
